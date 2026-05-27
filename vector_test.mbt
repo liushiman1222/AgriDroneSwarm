@@ -1,15 +1,22 @@
-test "vector addition" {
-    let v1 = Vector3D::new(1.0, 2.0, 3.0)
-    let v2 = Vector3D::new(4.0, 5.0, 6.0)
-    let v3 = v1.add(v2)
-    inspect(v3.x, content="5")
-    inspect(v3.y, content="7")
-    inspect(v3.z, content="9")
+test "vector scale" {
+    let v = Vector3D::new(2.0, 3.0, 4.0)
+    let scaled = v.scale(2.0)
+    inspect(scaled.x, content="4")
+    inspect(scaled.y, content="6")
+    inspect(scaled.z, content="8")
 }
 
-test "vector dot" {
-    let v1 = Vector3D::new(1.0, 2.0, 3.0)
-    let v2 = Vector3D::new(4.0, 5.0, 6.0)
-    let dot_val = v1.dot(v2)
-    inspect(dot_val, content="32")
+test "vector cross" {
+    let v1 = Vector3D::new(1.0, 0.0, 0.0)
+    let v2 = Vector3D::new(0.0, 1.0, 0.0)
+    let cross = v1.cross(v2)
+    inspect(cross.x, content="0")
+    inspect(cross.y, content="0")
+    inspect(cross.z, content="1")
+}
+
+test "vector length" {
+    let v = Vector3D::new(3.0, 4.0, 0.0)
+    let len = v.length()
+    inspect(len, content="5")
 }
