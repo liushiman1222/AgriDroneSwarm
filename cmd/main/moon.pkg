@@ -1,3 +1,7 @@
-﻿{
-    "is_main": true
+import {
+  "moonbitlang/core/builtin"
 }
+
+options(
+  "is-main": true
+)
