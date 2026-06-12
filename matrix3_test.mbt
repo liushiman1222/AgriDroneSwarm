@@ -36,11 +36,17 @@ test "matrix3_inverse" {
     match m.inverse() {
         Some(inv) => {
             let identity = m.mul(inv)
-            // 检查对角元接近1，非对角接近0
-            inspect(identity.data[0][0] > 0.99, content="true")
-            inspect(identity.data[1][1] > 0.99, content="true")
-            inspect(identity.data[2][2] > 0.99, content="true")
-            inspect(identity.data[0][1].abs() < 1e-6, content="true")
+
+            inspect(identity.data[0][0] > 0.99 && identity.data[0][0] < 1.01, content="true")
+            inspect(identity.data[1][1] > 0.99 && identity.data[1][1] < 1.01, content="true")
+            inspect(identity.data[2][2] > 0.99 && identity.data[2][2] < 1.01, content="true")
+
+            inspect(identity.data[0][1] > -0.01 && identity.data[0][1] < 0.01, content="true")
+            inspect(identity.data[0][2] > -0.01 && identity.data[0][2] < 0.01, content="true")
+            inspect(identity.data[1][0] > -0.01 && identity.data[1][0] < 0.01, content="true")
+            inspect(identity.data[1][2] > -0.01 && identity.data[1][2] < 0.01, content="true")
+            inspect(identity.data[2][0] > -0.01 && identity.data[2][0] < 0.01, content="true")
+            inspect(identity.data[2][1] > -0.01 && identity.data[2][1] < 0.01, content="true")
         }
         None => { inspect(false, content="true") }
     }

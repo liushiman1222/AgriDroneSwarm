@@ -1,145 +1,187 @@
-// matrix3.mbt - 3x3 矩阵运算
-
 pub struct Matrix3 {
-    data: Array[Array[Double]]  // 3x3 矩阵，按行存储
+  data: Array[Array[Double]]
+}
+pub fn Matrix3::new(data: Array[Array[Double]]) -> Matrix3 {
+  { data: data }
 }
 
-/// 创建新矩阵，从给定的 3x3 数组（每个元素是 Double）
-pub fn Matrix3::new(rows: Array[Array[Double]]) -> Matrix3 {
-    // 简单检查形状
-    if rows.length() != 3 || rows[0].length() != 3 {
-        panic("Matrix3 must be 3x3")
-    }
-    { data: rows }
+fn new_matrix3(rows: Array[Array[Double]]) -> Matrix3 {
+  if rows.length() != 3 {
+    abort("Matrix3 must be 3x3")
+  }
+  if rows[0].length() != 3 {
+    abort("Matrix3 must be 3x3")
+  }
+  if rows[1].length() != 3 {
+    abort("Matrix3 must be 3x3")
+  }
+  if rows[2].length() != 3 {
+    abort("Matrix3 must be 3x3")
+  }
+  { data: rows }
 }
 
-/// 零矩阵
 pub fn Matrix3::zero() -> Matrix3 {
-    let rows = [
-        [0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0],
-        [0.0, 0.0, 0.0],
-    ]
-    Matrix3::new(rows)
+  new_matrix3([
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+    [0.0, 0.0, 0.0],
+  ])
 }
 
-/// 单位矩阵
 pub fn Matrix3::identity() -> Matrix3 {
-    let rows = [
-        [1.0, 0.0, 0.0],
-        [0.0, 1.0, 0.0],
-        [0.0, 0.0, 1.0],
-    ]
-    Matrix3::new(rows)
+  new_matrix3([
+    [1.0, 0.0, 0.0],
+    [0.0, 1.0, 0.0],
+    [0.0, 0.0, 1.0],
+  ])
 }
 
-/// 矩阵加法
 pub fn Matrix3::add(self: Matrix3, other: Matrix3) -> Matrix3 {
-    let mut result_rows = []
-    for i in 0..3 {
-        let mut row = []
-        for j in 0..3 {
-            row.push(self.data[i][j] + other.data[i][j])
-        }
-        result_rows.push(row)
-    }
-    Matrix3::new(result_rows)
+  new_matrix3([
+    [
+      self.data[0][0] + other.data[0][0],
+      self.data[0][1] + other.data[0][1],
+      self.data[0][2] + other.data[0][2],
+    ],
+    [
+      self.data[1][0] + other.data[1][0],
+      self.data[1][1] + other.data[1][1],
+      self.data[1][2] + other.data[1][2],
+    ],
+    [
+      self.data[2][0] + other.data[2][0],
+      self.data[2][1] + other.data[2][1],
+      self.data[2][2] + other.data[2][2],
+    ],
+  ])
 }
 
-/// 矩阵减法
 pub fn Matrix3::sub(self: Matrix3, other: Matrix3) -> Matrix3 {
-    let mut result_rows = []
-    for i in 0..3 {
-        let mut row = []
-        for j in 0..3 {
-            row.push(self.data[i][j] - other.data[i][j])
-        }
-        result_rows.push(row)
-    }
-    Matrix3::new(result_rows)
+  new_matrix3([
+    [
+      self.data[0][0] - other.data[0][0],
+      self.data[0][1] - other.data[0][1],
+      self.data[0][2] - other.data[0][2],
+    ],
+    [
+      self.data[1][0] - other.data[1][0],
+      self.data[1][1] - other.data[1][1],
+      self.data[1][2] - other.data[1][2],
+    ],
+    [
+      self.data[2][0] - other.data[2][0],
+      self.data[2][1] - other.data[2][1],
+      self.data[2][2] - other.data[2][2],
+    ],
+  ])
 }
 
-/// 数乘
 pub fn Matrix3::scalar_mul(self: Matrix3, scalar: Double) -> Matrix3 {
-    let mut result_rows = []
-    for i in 0..3 {
-        let mut row = []
-        for j in 0..3 {
-            row.push(self.data[i][j] * scalar)
-        }
-        result_rows.push(row)
-    }
-    Matrix3::new(result_rows)
+  new_matrix3([
+    [
+      self.data[0][0] * scalar,
+      self.data[0][1] * scalar,
+      self.data[0][2] * scalar,
+    ],
+    [
+      self.data[1][0] * scalar,
+      self.data[1][1] * scalar,
+      self.data[1][2] * scalar,
+    ],
+    [
+      self.data[2][0] * scalar,
+      self.data[2][1] * scalar,
+      self.data[2][2] * scalar,
+    ],
+  ])
 }
 
-/// 矩阵乘法
 pub fn Matrix3::mul(self: Matrix3, other: Matrix3) -> Matrix3 {
-    let mut result_rows = []
-    for i in 0..3 {
-        let mut row = []
-        for j in 0..3 {
-            let mut sum = 0.0
-            for k in 0..3 {
-                sum += self.data[i][k] * other.data[k][j]
-            }
-            row.push(sum)
-        }
-        result_rows.push(row)
-    }
-    Matrix3::new(result_rows)
+  let a00 = self.data[0][0]
+  let a01 = self.data[0][1]
+  let a02 = self.data[0][2]
+  let a10 = self.data[1][0]
+  let a11 = self.data[1][1]
+  let a12 = self.data[1][2]
+  let a20 = self.data[2][0]
+  let a21 = self.data[2][1]
+  let a22 = self.data[2][2]
+
+  let b00 = other.data[0][0]
+  let b01 = other.data[0][1]
+  let b02 = other.data[0][2]
+  let b10 = other.data[1][0]
+  let b11 = other.data[1][1]
+  let b12 = other.data[1][2]
+  let b20 = other.data[2][0]
+  let b21 = other.data[2][1]
+  let b22 = other.data[2][2]
+
+  new_matrix3([
+    [
+      a00 * b00 + a01 * b10 + a02 * b20,
+      a00 * b01 + a01 * b11 + a02 * b21,
+      a00 * b02 + a01 * b12 + a02 * b22,
+    ],
+    [
+      a10 * b00 + a11 * b10 + a12 * b20,
+      a10 * b01 + a11 * b11 + a12 * b21,
+      a10 * b02 + a11 * b12 + a12 * b22,
+    ],
+    [
+      a20 * b00 + a21 * b10 + a22 * b20,
+      a20 * b01 + a21 * b11 + a22 * b21,
+      a20 * b02 + a21 * b12 + a22 * b22,
+    ],
+  ])
 }
 
-/// 转置
 pub fn Matrix3::transpose(self: Matrix3) -> Matrix3 {
-    let mut rows = []
-    for i in 0..3 {
-        let mut row = []
-        for j in 0..3 {
-            row.push(self.data[j][i])
-        }
-        rows.push(row)
-    }
-    Matrix3::new(rows)
+  new_matrix3([
+    [self.data[0][0], self.data[1][0], self.data[2][0]],
+    [self.data[0][1], self.data[1][1], self.data[2][1]],
+    [self.data[0][2], self.data[1][2], self.data[2][2]],
+  ])
 }
 
-/// 行列式
 pub fn Matrix3::det(self: Matrix3) -> Double {
-    let a = self.data[0][0]; let b = self.data[0][1]; let c = self.data[0][2];
-    let d = self.data[1][0]; let e = self.data[1][1]; let f = self.data[1][2];
-    let g = self.data[2][0]; let h = self.data[2][1]; let i_val = self.data[2][2];
-    a * (e * i_val - f * h) - b * (d * i_val - f * g) + c * (d * h - e * g)
+  let a = self.data[0][0]
+  let b = self.data[0][1]
+  let c = self.data[0][2]
+  let d = self.data[1][0]
+  let e = self.data[1][1]
+  let f = self.data[1][2]
+  let g = self.data[2][0]
+  let h = self.data[2][1]
+  let i = self.data[2][2]
+
+  a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g)
 }
 
-/// 伴随矩阵（余子式矩阵的转置）
-fn Matrix3::adjugate(self: Matrix3) -> Matrix3 {
-    let a = self.data[0][0]; let b = self.data[0][1]; let c = self.data[0][2];
-    let d = self.data[1][0]; let e = self.data[1][1]; let f = self.data[1][2];
-    let g = self.data[2][0]; let h = self.data[2][1]; let i_val = self.data[2][2];
+pub fn Matrix3::adjugate(self: Matrix3) -> Matrix3 {
+  let a = self.data[0][0]
+  let b = self.data[0][1]
+  let c = self.data[0][2]
+  let d = self.data[1][0]
+  let e = self.data[1][1]
+  let f = self.data[1][2]
+  let g = self.data[2][0]
+  let h = self.data[2][1]
+  let i = self.data[2][2]
 
-    // 余子式矩阵
-    let cofactor_rows = [
-        [e*i_val - f*h, -(d*i_val - f*g), d*h - e*g],
-        [-(b*i_val - c*h), a*i_val - c*g, -(a*h - b*g)],
-        [b*f - c*e, -(a*f - c*d), a*e - b*d],
-    ];
-    // 转置得到伴随矩阵
-    let mut adj_rows = []
-    for i in 0..3 {
-        let mut row = []
-        for j in 0..3 {
-            row.push(cofactor_rows[j][i])
-        }
-        adj_rows.push(row)
-    }
-    Matrix3::new(adj_rows)
+  new_matrix3([
+    [e * i - f * h, -(d * i - f * g), d * h - e * g],
+    [-(b * i - c * h), a * i - c * g, -(a * h - b * g)],
+    [b * f - c * e, -(a * f - c * d), a * e - b * d],
+  ]).transpose()
 }
 
-/// 逆矩阵（要求行列式非零）
 pub fn Matrix3::inverse(self: Matrix3) -> Option[Matrix3] {
-    let det = self.det()
-    if det == 0.0 {
-        return None
-    }
-    let adj = self.adjugate()
-    Some(adj.scalar_mul(1.0 / det))
+  let det = self.det()
+  if det == 0.0 {
+    None
+  } else {
+    Some(self.adjugate().scalar_mul(1.0 / det))
+  }
 }
