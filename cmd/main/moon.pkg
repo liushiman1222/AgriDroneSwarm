@@ -1,7 +1,0 @@
-import {
-  "moonbitlang/core/builtin"
-}
-
-options(
-  "is-main": true
-)
