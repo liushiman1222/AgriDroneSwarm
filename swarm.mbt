@@ -24,7 +24,7 @@ pub fn Drone::new(
 }
 
 pub fn Drone::speed(self: Drone) -> Double {
-  self.velocity.dot(self.velocity).sqrt()
+  self.velocity.length()
 }
 
 pub fn Drone::with_velocity(self: Drone, velocity: Vector2D) -> Drone {
@@ -45,9 +45,20 @@ pub fn Drone::with_position(self: Drone, position: Vector2D) -> Drone {
   }
 }
 
+pub fn Drone::limit_speed(self: Drone) -> Drone {
+  let speed = self.speed()
+  if speed <= self.max_speed {
+    self
+  } else {
+    let limited_velocity = self.velocity.normalize().scale(self.max_speed)
+    self.with_velocity(limited_velocity)
+  }
+}
+
 pub fn Drone::step(self: Drone, dt: Double) -> Drone {
-  let delta = Vector2D::new(self.velocity.x * dt, self.velocity.y * dt)
-  self.with_position(self.position.add(delta))
+  let drone = self.limit_speed()
+  let delta = drone.velocity.scale(dt)
+  drone.with_position(drone.position.add(delta))
 }
 
 pub fn Swarm::new(drones: Array[Drone]) -> Swarm {
