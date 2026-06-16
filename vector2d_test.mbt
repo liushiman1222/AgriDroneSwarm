@@ -1,4 +1,4 @@
-test "vector2d_add_dot" {
+﻿test "vector2d_add_dot" {
   let a = Vector2D::new(1.0, 2.0)
   let b = Vector2D::new(3.0, 4.0)
 
@@ -40,7 +40,6 @@ test "vector2d_length" {
 
   inspect(a.length(), content="5")
 }
-
 test "vector2d_normalize" {
   let a = Vector2D::new(3.0, 4.0)
 
