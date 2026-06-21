@@ -210,3 +210,154 @@ test "swarm readiness and regroup" {
   inspect(swarm.formation_quality() > 0.0, content="true")
   inspect(swarm.status_score() > 0.0, content="true")
 }
+///|
+/// Test single-drone swarm metrics.
+test "single drone swarm metrics" {
+  let d1 = Drone::new(
+    Vector2D::new(3.0, 4.0),
+    Vector2D::new(6.0, 8.0),
+    10.0,
+  )
+
+  let swarm = Swarm::new([d1])
+  let center = swarm.center()
+  let avg_velocity = swarm.average_velocity()
+
+  inspect(swarm.size(), content="1")
+  inspect(swarm.is_empty(), content="false")
+  inspect(swarm.is_operational(), content="true")
+
+  inspect(approx_equal(center.x, 3.0, 0.000001), content="true")
+  inspect(approx_equal(center.y, 4.0, 0.000001), content="true")
+
+  inspect(approx_equal(avg_velocity.x, 6.0, 0.000001), content="true")
+  inspect(approx_equal(avg_velocity.y, 8.0, 0.000001), content="true")
+  inspect(approx_equal(swarm.average_speed(), 10.0, 0.000001), content="true")
+
+  inspect(approx_equal(swarm.max_distance_from_center(), 0.0, 0.000001), content="true")
+  inspect(approx_equal(swarm.average_distance_from_center(), 0.0, 0.000001), content="true")
+}
+///|
+/// Test radius boundary: a drone exactly on radius should be counted as inside.
+test "target radius boundary inclusive" {
+  let target = Vector2D::new(0.0, 0.0)
+
+  let d1 = Drone::new(
+    Vector2D::new(3.0, 4.0),
+    Vector2D::new(0.0, 0.0),
+    10.0,
+  )
+  let d2 = Drone::new(
+    Vector2D::new(0.0, 5.0),
+    Vector2D::new(0.0, 0.0),
+    10.0,
+  )
+
+  let swarm = Swarm::new([d1, d2])
+
+  inspect(swarm.count_within_radius(target, 5.0), content="2")
+  inspect(swarm.any_within_radius(target, 5.0), content="true")
+  inspect(swarm.all_within_radius(target, 5.0), content="true")
+  inspect(swarm.is_mission_complete(target, 5.0), content="true")
+  inspect(approx_equal(swarm.arrival_ratio(target, 5.0), 1.0, 0.000001), content="true")
+}
+///|
+/// Test identical positions produce zero spread.
+test "identical positions zero spread" {
+  let d1 = Drone::new(
+    Vector2D::new(5.0, 5.0),
+    Vector2D::new(1.0, 0.0),
+    10.0,
+  )
+  let d2 = Drone::new(
+    Vector2D::new(5.0, 5.0),
+    Vector2D::new(1.0, 0.0),
+    10.0,
+  )
+  let d3 = Drone::new(
+    Vector2D::new(5.0, 5.0),
+    Vector2D::new(1.0, 0.0),
+    10.0,
+  )
+
+  let swarm = Swarm::new([d1, d2, d3])
+  let center = swarm.center()
+
+  inspect(approx_equal(center.x, 5.0, 0.000001), content="true")
+  inspect(approx_equal(center.y, 5.0, 0.000001), content="true")
+  inspect(approx_equal(swarm.max_distance_from_center(), 0.0, 0.000001), content="true")
+  inspect(approx_equal(swarm.average_distance_from_center(), 0.0, 0.000001), content="true")
+  inspect(swarm.is_too_spread(0.0), content="false")
+}
+///|
+/// Test spread metrics are stable under translation.
+test "spread metrics translation invariant" {
+  let d1 = Drone::new(
+    Vector2D::new(0.0, 0.0),
+    Vector2D::new(0.0, 0.0),
+    10.0,
+  )
+  let d2 = Drone::new(
+    Vector2D::new(6.0, 8.0),
+    Vector2D::new(0.0, 0.0),
+    10.0,
+  )
+
+  let translated_d1 = Drone::new(
+    Vector2D::new(100.0, -50.0),
+    Vector2D::new(0.0, 0.0),
+    10.0,
+  )
+  let translated_d2 = Drone::new(
+    Vector2D::new(106.0, -42.0),
+    Vector2D::new(0.0, 0.0),
+    10.0,
+  )
+
+  let swarm = Swarm::new([d1, d2])
+  let translated_swarm = Swarm::new([translated_d1, translated_d2])
+
+  let translated_center = translated_swarm.center()
+
+  inspect(approx_equal(translated_center.x, 103.0, 0.000001), content="true")
+  inspect(approx_equal(translated_center.y, -46.0, 0.000001), content="true")
+
+  inspect(
+    approx_equal(
+      swarm.max_distance_from_center(),
+      translated_swarm.max_distance_from_center(),
+      0.000001,
+    ),
+    content="true",
+  )
+  inspect(
+    approx_equal(
+      swarm.average_distance_from_center(),
+      translated_swarm.average_distance_from_center(),
+      0.000001,
+    ),
+    content="true",
+  )
+}
+///|
+/// Test regroup decision for a spread and misaligned swarm.
+test "spread misaligned swarm needs regroup" {
+  let d1 = Drone::new(
+    Vector2D::new(0.0, 0.0),
+    Vector2D::new(1.0, 0.0),
+    10.0,
+  )
+  let d2 = Drone::new(
+    Vector2D::new(100.0, 0.0),
+    Vector2D::new(-1.0, 0.0),
+    10.0,
+  )
+
+  let swarm = Swarm::new([d1, d2])
+
+  inspect(approx_equal(swarm.max_distance_from_center(), 50.0, 0.000001), content="true")
+  inspect(swarm.is_too_spread(10.0), content="true")
+  inspect(approx_equal(swarm.alignment_score(), 0.0, 0.000001), content="true")
+  inspect(swarm.needs_regroup(10.0, 0.8), content="true")
+  inspect(swarm.is_ready_for_task(10.0, 0.8), content="false")
+}
