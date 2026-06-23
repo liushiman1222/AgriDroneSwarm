@@ -894,75 +894,113 @@ Mission 模块用于描述任务类型、任务优先级、工作量、电量需
 
 AgriDroneSwarm/
 
+├── .github/                  # GitHub 配置
 
+├── cmd/
 
-\- .github/：GitHub 配置
+│   └── main.mbt              # 命令行 demo 入口
 
-\- docs/：项目文档
+├── docs/
 
-\- docs/examples.md：使用示例说明
+│   └── examples.md           # 使用示例说明
 
-\- tests/：测试相关目录
+├── tests/                    # 测试相关目录
 
-\- AgriDroneSwarm.mbt：包入口或聚合文件
+├── AgriDroneSwarm.mbt        # 库侧 demo 聚合入口
 
-\- angle.mbt：角度工具
+├── angle.mbt                 # 角度工具
 
-\- astar.mbt：A\* 路径规划
+├── astar.mbt                 # A\* 路径规划
 
-\- astar\_test.mbt：A\* 测试
+├── astar\_test.mbt            # A\* 测试
 
-\- astar\_more\_test.mbt：A\* 扩展测试
+├── astar\_more\_test.mbt       # A\* 扩展测试
 
-\- constants.mbt：常量定义
+├── battery.mbt               # 电池状态判断
 
-\- drone.mbt：无人机状态与任务能力模块
+├── command.mbt               # 指令模型
 
-\- drone\_test.mbt：Drone 模块测试
+├── constants.mbt             # 常量定义
 
-\- extra\_test.mbt：额外测试
+├── control.mbt               # 控制辅助
 
-\- geometry.mbt：几何工具
+├── coverage.mbt              # 覆盖分析
 
-\- math\_extra.mbt：数学扩展
+├── drone.mbt                 # 无人机状态与任务能力模块
 
-\- matrix3.mbt：3x3 矩阵
+├── drone\_test.mbt            # Drone 模块测试
 
-\- matrix3\_test.mbt：矩阵测试
+├── event\_log.mbt             # 事件日志
 
-\- matrix3\_more\_test.mbt：矩阵扩展测试
+├── extra\_test.mbt            # 额外测试
 
-\- pid.mbt：PID 控制器
+├── field.mbt                 # 农田/任务区域建模
 
-\- pid\_test.mbt：PID 测试
+├── fleet.mbt                 # 机队管理
 
-\- pid\_more\_test.mbt：PID 扩展测试
+├── geofence.mbt              # 地理围栏判断
 
-\- swarm.mbt：无人机集群分析模块
+├── geometry.mbt              # 几何工具
 
-\- swarm\_test.mbt：Swarm 模块测试
+├── maintenance.mbt           # 维护状态评估
 
-\- utils.mbt：通用工具
+├── math\_extra.mbt            # 数学扩展
 
-\- vector.mbt：三维向量
+├── matrix3.mbt               # 3x3 矩阵
 
-\- vector\_test.mbt：三维向量测试
+├── matrix3\_test.mbt          # 矩阵测试
 
-\- vector\_more\_test.mbt：三维向量扩展测试
+├── matrix3\_more\_test.mbt     # 矩阵扩展测试
 
-\- vector2d.mbt：二维向量
+├── mission.mbt               # 任务类型、优先级和派发准备判断
 
-\- vector2d\_test.mbt：二维向量测试
+├── obstacle.mbt              # 障碍物判断
 
-\- moon.mod：MoonBit 模块配置
+├── path\_planning.mbt         # 路径规划辅助
 
-\- moon.pkg：MoonBit 包配置
+├── payload.mbt               # 载荷判断
 
-\- LICENSE：开源许可证
+├── pid.mbt                   # PID 控制器
 
-\- README.md：项目说明文档
+├── pid\_test.mbt              # PID 测试
 
+├── pid\_more\_test.mbt         # PID 扩展测试
 
+├── route.mbt                 # 路线辅助
+
+├── scheduler.mbt             # 调度辅助模块
+
+├── sensor.mbt                # 传感器能力评估
+
+├── spray.mbt                 # 喷洒任务辅助
+
+├── swarm.mbt                 # 无人机集群分析模块
+
+├── swarm\_test.mbt            # Swarm 模块测试
+
+├── telemetry.mbt             # 遥测数据辅助
+
+├── utils.mbt                 # 通用工具
+
+├── vector.mbt                # 三维向量
+
+├── vector\_test.mbt           # 三维向量测试
+
+├── vector\_more\_test.mbt      # 三维向量扩展测试
+
+├── vector2d.mbt              # 二维向量
+
+├── vector2d\_test.mbt         # 二维向量测试
+
+├── weather.mbt               # 天气条件评估
+
+├── moon.mod                  # MoonBit 模块配置
+
+├── moon.pkg                  # MoonBit 包配置
+
+├── LICENSE                   # 开源许可证
+
+└── README.md                 # 项目说明文档
 
 \---
 
@@ -1374,17 +1412,9 @@ moon build
 
 ##### \## 示例文档
 
-
-
 更多使用思路见：
 
-
-
 docs/examples.md
-
-
-
-当前示例主要以说明性文档为主，暂不包含复杂可执行入口。这样可以避免入口配置影响核心库的稳定性。
 
 
 
@@ -1435,56 +1465,6 @@ git push
 git push -u origin your-feature-branch
 
 
-
-
-
-\---
-
-
-
-##### \## Git 提交建议
-
-
-
-如果只是修改 README，可以提交：
-
-
-
-git add README.md
-
-git commit -m "docs: improve project README"
-
-
-
-如果同时包含 Drone 和 Swarm 测试，可以提交：
-
-
-
-git add README.md drone\_test.mbt swarm\_test.mbt
-
-git commit -m "docs: update README and improve test coverage"
-
-
-
-如果包含全部当前改动，可以提交：
-
-
-
-git add .
-
-git commit -m "feat: add drone and swarm algorithm modules"
-
-
-
-提交前建议再次执行：
-
-
-
-moon check
-
-moon test
-
-moon build
 
 
 
