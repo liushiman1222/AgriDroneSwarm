@@ -4,3 +4,7 @@ target/
 target
 .mooncakes/
 .moonagent/
+# MoonBit build output
+_build/
+.mooncakes/
+
