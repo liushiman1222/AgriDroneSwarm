@@ -193,6 +193,7 @@ AgriDroneSwarm 当前定位为：
 | Algorithm Foundation Layer                       |
 | vector | matrix | geometry | pid | astar | utils |
 +--------------------------------------------------+
+```
 
 ## 6. 典型任务流程（Workflow）
 
@@ -270,6 +271,7 @@ AgriDroneSwarm 当前定位为：
        - 任务执行摘要
 
 这套流程对应 demo() 中的模块顺序，用于端到端验证算法逻辑链。
+```
 
 ## 7. 关键算法与实现思路
 
