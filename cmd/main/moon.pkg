@@ -1,7 +1,0 @@
-import {
-  "username/AgriDroneSwarm" @lib,
-}
-
-options(
-  "is-main": true,
-)
