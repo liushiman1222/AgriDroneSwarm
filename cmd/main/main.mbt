@@ -1,3 +1,3 @@
-fn main {
-  println("AgriDroneSwarm command entry")
+﻿fn main {
+    @liushiman1222/AgriDroneSwarm.demo()
 }
