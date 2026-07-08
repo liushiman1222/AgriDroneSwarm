@@ -1,0 +1,1226 @@
+// Generated using `moon info`, DON'T EDIT IT
+package "liushiman1222/AgriDroneSwarm"
+
+// Values
+pub const E : Double = 2.718281828459045
+
+pub const PI : Double = 3.141592653589793
+
+pub fn a_star(Point, Point, Int, Int, Array[Point]) -> Array[Point]?
+
+pub fn alert_level_name(Int) -> String
+
+pub fn anomaly_severity_score(Int, Int, Int) -> Int
+
+pub fn battery_after_flight(Int, Int) -> Int
+
+pub fn battery_available_minutes(Int, Int, Int, Int, Int) -> Int
+
+pub fn battery_can_start_mission(Int, Int, Int, Int) -> Bool
+
+pub fn battery_charge_minutes(Int, Int, Int) -> Int
+
+pub fn battery_charge_rate_per_minute(Int) -> Int
+
+pub fn battery_clamp_non_negative(Int) -> Int
+
+pub fn battery_clamp_percent(Int) -> Int
+
+pub fn battery_clamp_positive(Int) -> Int
+
+pub fn battery_consumption_percent(Int, Int, Int, Int, Int) -> Int
+
+pub fn battery_drain_per_minute(Int, Int, Int, Int) -> Int
+
+pub fn battery_emergency_landing_required(Int) -> Bool
+
+pub fn battery_health_name(Int) -> String
+
+pub fn battery_health_score(Int, Int, Int) -> Int
+
+pub fn battery_healthy_for_use(Int) -> Bool
+
+pub fn battery_level_name(Int) -> String
+
+pub fn battery_mission_status(Int, Int, Int, Int) -> String
+
+pub fn battery_mode_cruise() -> Int
+
+pub fn battery_mode_drain_per_minute(Int) -> Int
+
+pub fn battery_mode_idle() -> Int
+
+pub fn battery_mode_name(Int) -> String
+
+pub fn battery_mode_return() -> Int
+
+pub fn battery_mode_spray() -> Int
+
+pub fn battery_mode_survey() -> Int
+
+pub fn battery_payload_drain_penalty(Int) -> Int
+
+pub fn battery_percent_level_name(Int) -> String
+
+pub fn battery_remaining_after_segment(Int, Int, Int, Int, Int, Int) -> Int
+
+pub fn battery_replace_recommended(Int, Int) -> Bool
+
+pub fn battery_reserve_required_percent(Int) -> Int
+
+pub fn battery_return_required_percent(Int, Int) -> Int
+
+pub fn battery_risk_name(Int) -> String
+
+pub fn battery_risk_score(Int, Int, Int, Int, Int) -> Int
+
+pub fn battery_safe_required_percent(Int, Int, Int) -> Int
+
+pub fn battery_should_return_to_base(Int, Int, Int, Int) -> Bool
+
+pub fn battery_state_critical() -> Int
+
+pub fn battery_state_empty() -> Int
+
+pub fn battery_state_from_percent(Int) -> Int
+
+pub fn battery_state_full() -> Int
+
+pub fn battery_state_low() -> Int
+
+pub fn battery_state_name(Int) -> String
+
+pub fn battery_state_normal() -> Int
+
+pub fn battery_summary() -> Unit
+
+pub fn battery_temperature_drain_penalty(Int) -> Int
+
+pub fn battery_wind_drain_penalty(Int) -> Int
+
+pub fn blocked_by_obstacle(FieldPoint, FieldObstacle) -> Bool
+
+pub fn can_accept_mission(Int, Int) -> Bool
+
+pub fn can_assign_mission(Int, Int, Int, Int, Int, Int) -> Bool
+
+pub fn can_resume_task(Bool, Bool, Bool) -> Bool
+
+pub fn can_start_scheduled_task(Int, Int, Int, Int, Int, Int) -> Bool
+
+pub fn capacity_level_name(Int) -> String
+
+pub fn clamp(Double, Double, Double) -> Double
+
+pub fn clamp_battery(Int) -> Int
+
+pub fn clamp_drone_count(Int) -> Int
+
+pub fn clamp_mission_priority(Int) -> Int
+
+pub fn clamp_percent(Int) -> Int
+
+pub fn clamp_queue_index(Int) -> Int
+
+pub fn clamp_rainfall(Int) -> Int
+
+pub fn clamp_sensor_quality(Int) -> Int
+
+pub fn clamp_visibility(Int) -> Int
+
+pub fn clamp_wind_speed(Int) -> Int
+
+pub fn cold_stress_detected(Int) -> Bool
+
+pub fn command_ack_timeout_ms(String) -> Int
+
+pub fn command_can_execute(String, Bool, Int, Int) -> Bool
+
+pub fn command_clamp_non_negative(Int) -> Int
+
+pub fn command_clamp_percent(Int) -> Int
+
+pub fn command_delivery_score(Int, Int, Int) -> Int
+
+pub fn command_is_emergency(String) -> Bool
+
+pub fn command_next_state(String, String) -> String
+
+pub fn command_priority(String) -> Int
+
+pub fn command_requires_airborne(String) -> Bool
+
+pub fn command_retry_limit(String) -> Int
+
+pub fn command_spray_state(String, Bool) -> Bool
+
+pub fn command_status(Bool, Int) -> String
+
+pub fn command_summary() -> Unit
+
+pub fn contains_point(Array[Point], Point) -> Bool
+
+pub fn control_altitude_status(Int, Int, Int) -> String
+
+pub fn control_battery_risk_level(Int) -> String
+
+pub fn control_clamp_altitude_meters(Int, Int) -> Int
+
+pub fn control_clamp_non_negative(Int) -> Int
+
+pub fn control_clamp_percent(Int) -> Int
+
+pub fn control_clamp_speed_kmh(Int, Int) -> Int
+
+pub fn control_operation_mode(Bool, Bool) -> String
+
+pub fn control_safety_score(Int, Int, Bool, Bool) -> Int
+
+pub fn control_should_emergency_land(Int, Int, Int) -> Bool
+
+pub fn control_should_return_home(Int, Int, Int) -> Bool
+
+pub fn control_signal_risk_level(Int) -> String
+
+pub fn control_speed_status(Int, Int) -> String
+
+pub fn control_summary() -> Unit
+
+pub fn count_zones_covering(FarmField, FieldPoint) -> Int
+
+pub fn coverage_level_name(Int) -> String
+
+pub fn coverage_percent(Int, Int) -> Int
+
+pub fn coverage_quality_name(Int) -> String
+
+pub fn coverage_quality_score(Int, Int, Int, Int) -> Int
+
+pub fn coverage_summary() -> Unit
+
+pub fn crop_anomaly_count(Int, Int, Int) -> Int
+
+pub fn crop_health_name(Int) -> String
+
+pub fn data_quality_acceptable(Int, Int, Int, Int) -> Bool
+
+pub fn deadline_bonus(Int) -> Int
+
+pub fn deg_to_rad(Double) -> Double
+
+pub fn demo() -> Unit
+
+pub fn dispatch_window_open(Int, Int, Int) -> Bool
+
+pub fn distance(Vector2D, Vector2D) -> Double
+
+pub fn distance2(FieldPoint, FieldPoint) -> Int
+
+pub fn drone_status_assigned() -> Int
+
+pub fn drone_status_charging() -> Int
+
+pub fn drone_status_fault() -> Int
+
+pub fn drone_status_flying() -> Int
+
+pub fn drone_status_idle() -> Int
+
+pub fn drone_status_name(Int) -> String
+
+pub fn drone_status_returning() -> Int
+
+pub fn drone_summary() -> Unit
+
+pub fn dry_soil_detected(Int) -> Bool
+
+pub fn enough_drones_for_mission(Int, Int) -> Bool
+
+pub fn estimate_completion_time(Int, Int) -> Int
+
+pub fn estimate_covered_area(Int, Int, Int) -> Int
+
+pub fn estimate_crop_health(Int, Int, Int) -> Int
+
+pub fn estimate_dispatch_delay(Int, Int) -> Int
+
+pub fn estimate_flight_cost(Int) -> Int
+
+pub fn estimate_flight_steps(Int) -> Int
+
+pub fn estimate_image_clarity(Int, Int) -> Int
+
+pub fn estimate_inspection_capacity(Int, Int) -> Int
+
+pub fn estimate_mission_workload(Int, Int) -> Int
+
+pub fn estimate_required_battery(Int, Int) -> Int
+
+pub fn estimate_required_drones(Int) -> Int
+
+pub fn event_log_audit_score(Int, Int, Bool) -> Int
+
+pub fn event_log_category(String) -> String
+
+pub fn event_log_clamp_non_negative(Int) -> Int
+
+pub fn event_log_clamp_percent(Int) -> Int
+
+pub fn event_log_format_message(String, String, Int) -> String
+
+pub fn event_log_priority_label(Int) -> String
+
+pub fn event_log_requires_operator_ack(String) -> Bool
+
+pub fn event_log_retention_days(String) -> Int
+
+pub fn event_log_severity_score(String) -> Int
+
+pub fn event_log_should_notify(String, Int) -> Bool
+
+pub fn event_log_status(Int, Bool) -> String
+
+pub fn event_log_summary() -> Unit
+
+pub fn extra_strips_needed(Int, Int, Int) -> Int
+
+pub fn field_area(FarmField) -> Int
+
+pub fn field_summary() -> Unit
+
+pub fn fleet_availability_name(Int) -> String
+
+pub fn fleet_availability_percent(Int, Int, Int, Int, Int) -> Int
+
+pub fn fleet_available_count(Int, Int, Int, Int, Int) -> Int
+
+pub fn fleet_backup_enough(Int, Int) -> Bool
+
+pub fn fleet_backup_recommended(Int) -> Int
+
+pub fn fleet_battery_ready(Int, Int) -> Bool
+
+pub fn fleet_can_dispatch(Int, Int) -> Bool
+
+pub fn fleet_charging_demand(Int, Int) -> Int
+
+pub fn fleet_charging_demand_name(Int) -> String
+
+pub fn fleet_dispatch_risk_name(Int) -> String
+
+pub fn fleet_dispatch_risk_score(Int, Int, Int, Int) -> Int
+
+pub fn fleet_dispatch_shortage(Int, Int) -> Int
+
+pub fn fleet_drone_ready(Int, Int, Int, Int, Int) -> Bool
+
+pub fn fleet_fleet_fleet_fleet_fleet_fleet_fleet_fleet_clamp_battery(Int) -> Int
+
+pub fn fleet_health_name(Int) -> String
+
+pub fn fleet_health_score(Int, Int, Int, Int, Int) -> Int
+
+pub fn fleet_maintenance_pressure_name(Int) -> String
+
+pub fn fleet_maintenance_pressure_percent(Int, Int) -> Int
+
+pub fn fleet_payload_ready(Int, Int) -> Bool
+
+pub fn fleet_required_drones(Int, Int, Int, Int) -> Int
+
+pub fn fleet_required_drones_by_area(Int, Int) -> Int
+
+pub fn fleet_required_drones_by_time(Int, Int) -> Int
+
+pub fn fleet_requires_maintenance_plan(Int, Int, Int) -> Bool
+
+pub fn fleet_should_delay_dispatch(Int, Int, Int) -> Bool
+
+pub fn fleet_status_assigned() -> Int
+
+pub fn fleet_status_available(Int) -> Bool
+
+pub fn fleet_status_charging() -> Int
+
+pub fn fleet_status_idle() -> Int
+
+pub fn fleet_status_maintenance() -> Int
+
+pub fn fleet_status_name(Int) -> String
+
+pub fn fleet_status_needs_attention(Int) -> Bool
+
+pub fn fleet_status_offline() -> Int
+
+pub fn fleet_summary() -> Unit
+
+pub fn fleet_total_count(Int, Int, Int, Int, Int) -> Int
+
+pub fn fleet_unavailable_count(Int, Int, Int, Int, Int) -> Int
+
+pub fn fleet_workload_name(Int) -> String
+
+pub fn fleet_workload_percent(Int, Int) -> Int
+
+pub fn geofence_action(Int, Bool) -> String
+
+pub fn geofence_battery_penalty(Int) -> Int
+
+pub fn geofence_clamp_non_negative(Int) -> Int
+
+pub fn geofence_clamp_percent(Int) -> Int
+
+pub fn geofence_corrected_x(Int, Int, Int, Int) -> Int
+
+pub fn geofence_corrected_y(Int, Int, Int, Int) -> Int
+
+pub fn geofence_distance_bottom(Int, Int) -> Int
+
+pub fn geofence_distance_left(Int, Int) -> Int
+
+pub fn geofence_distance_right(Int, Int) -> Int
+
+pub fn geofence_distance_top(Int, Int) -> Int
+
+pub fn geofence_health_level(Int) -> String
+
+pub fn geofence_health_score(Int, Int) -> Int
+
+pub fn geofence_in_range(Int, Int, Int) -> Bool
+
+pub fn geofence_min_boundary_distance(Int, Int, Int, Int, Int, Int) -> Int
+
+pub fn geofence_near_boundary(Int, Int, Int, Int, Int, Int, Int) -> Bool
+
+pub fn geofence_outside_distance(Int, Int, Int, Int, Int, Int) -> Int
+
+pub fn geofence_point_inside(Int, Int, Int, Int, Int, Int) -> Bool
+
+pub fn geofence_risk_level(Int) -> String
+
+pub fn geofence_risk_score(Int, Int, Int, Int, Int, Int, Int) -> Int
+
+pub fn geofence_should_pause(Int) -> Bool
+
+pub fn geofence_should_return(Int) -> Bool
+
+pub fn geofence_speed_limit_mps(Int, Int) -> Int
+
+pub fn geofence_summary() -> Unit
+
+pub fn has_takeoff_battery(Int) -> Bool
+
+pub fn heat_stress_detected(Int) -> Bool
+
+pub fn image_clarity_name(Int) -> String
+
+pub fn in_bounds(FarmField, FieldPoint) -> Bool
+
+pub fn in_time_window(Int, Int, Int) -> Bool
+
+pub fn inspection_coverage_valid(Int, Int) -> Bool
+
+pub fn is_active_schedule_state(Int) -> Bool
+
+pub fn is_airborne(Int) -> Bool
+
+pub fn is_blocked(FarmField, FieldPoint) -> Bool
+
+pub fn is_closed_schedule_state(Int) -> Bool
+
+pub fn is_urgent_mission(Int, Int) -> Bool
+
+pub fn lerp(Double, Double, Double) -> Double
+
+pub fn low_vegetation_detected(Int) -> Bool
+
+pub fn maintenance_backlog_count(Int, Int) -> Int
+
+pub fn maintenance_backlog_name(Int) -> String
+
+pub fn maintenance_battery_wear_score(Int, Int) -> Int
+
+pub fn maintenance_can_fly(Int) -> Bool
+
+pub fn maintenance_clamp_count(Int) -> Int
+
+pub fn maintenance_clamp_minutes(Int) -> Int
+
+pub fn maintenance_clamp_score(Int) -> Int
+
+pub fn maintenance_comm_wear_score(Int, Int) -> Int
+
+pub fn maintenance_fault_battery() -> Int
+
+pub fn maintenance_fault_communication() -> Int
+
+pub fn maintenance_fault_motor() -> Int
+
+pub fn maintenance_fault_name(Int) -> String
+
+pub fn maintenance_fault_navigation() -> Int
+
+pub fn maintenance_fault_none() -> Int
+
+pub fn maintenance_fault_propeller() -> Int
+
+pub fn maintenance_fault_sensor() -> Int
+
+pub fn maintenance_motor_wear_score(Int, Int) -> Int
+
+pub fn maintenance_must_ground(Int, Int) -> Bool
+
+pub fn maintenance_navigation_wear_score(Int, Int) -> Int
+
+pub fn maintenance_predictive_trigger(Int, Int, Int) -> Bool
+
+pub fn maintenance_priority_name(Int) -> String
+
+pub fn maintenance_priority_score(Int, Int, Int) -> Int
+
+pub fn maintenance_propeller_wear_score(Int, Int) -> Int
+
+pub fn maintenance_repair_fits_window(Int, Int) -> Bool
+
+pub fn maintenance_repair_minutes(Int, Int) -> Int
+
+pub fn maintenance_sensor_wear_score(Int, Int) -> Int
+
+pub fn maintenance_service_capacity(Int, Int, Int) -> Int
+
+pub fn maintenance_spare_parts_enough(Int, Int) -> Bool
+
+pub fn maintenance_spare_parts_needed(Int, Int) -> Int
+
+pub fn maintenance_state_from_wear(Int) -> Int
+
+pub fn maintenance_state_grounded() -> Int
+
+pub fn maintenance_state_healthy() -> Int
+
+pub fn maintenance_state_name(Int) -> String
+
+pub fn maintenance_state_retired() -> Int
+
+pub fn maintenance_state_service_required() -> Int
+
+pub fn maintenance_state_warning() -> Int
+
+pub fn maintenance_summary() -> Unit
+
+pub fn maintenance_total_risk_score(Int, Int, Int, Int, Int, Int) -> Int
+
+pub fn maintenance_wear_level_name(Int) -> String
+
+pub fn make_demo_field() -> FarmField
+
+pub fn make_field_base(Int, Int, Int, String) -> FieldBase
+
+pub fn make_field_obstacle(Int, Int, Int, Int) -> FieldObstacle
+
+pub fn make_field_point(Int, Int) -> FieldPoint
+
+pub fn make_field_size(Int, Int) -> FieldSize
+
+pub fn make_field_zone(Int, String, Int, Int, Int, Int) -> FieldZone
+
+pub fn mapping_coverage_valid(Int, Int, Int) -> Bool
+
+pub fn missing_area(Int, Int) -> Int
+
+pub fn missing_level_name(Int) -> String
+
+pub fn missing_percent(Int, Int) -> Int
+
+pub fn mission_allows_empty_payload(Int) -> Bool
+
+pub fn mission_battery_sufficient(Int, Int) -> Bool
+
+pub fn mission_coverage_valid(Int, Int, Int, Int) -> Bool
+
+pub fn mission_needs_payload(Int) -> Bool
+
+pub fn mission_priority_critical() -> Int
+
+pub fn mission_priority_high() -> Int
+
+pub fn mission_priority_low() -> Int
+
+pub fn mission_priority_name(Int) -> String
+
+pub fn mission_priority_normal() -> Int
+
+pub fn mission_requires_multispectral(Int) -> Bool
+
+pub fn mission_score(Int, Int) -> Int
+
+pub fn mission_summary() -> Unit
+
+pub fn mission_type_charging() -> Int
+
+pub fn mission_type_emergency() -> Int
+
+pub fn mission_type_inspection() -> Int
+
+pub fn mission_type_mapping() -> Int
+
+pub fn mission_type_name(Int) -> String
+
+pub fn mission_type_spraying() -> Int
+
+pub fn mission_weather_compatible(Int, Int, Int, Int, Int) -> Bool
+
+pub fn nearest_base_index(FarmField, FieldPoint) -> Int
+
+pub fn needs_attention(Int, Int) -> Bool
+
+pub fn needs_recoverage(Int, Int, Int, Int) -> Bool
+
+pub fn next_state_after_dispatch(Bool) -> Int
+
+pub fn obstacle_altitude_risk(Int, Int) -> Int
+
+pub fn obstacle_avoidance_action(Int, Int, Int) -> String
+
+pub fn obstacle_avoidance_battery_cost(Int) -> Int
+
+pub fn obstacle_base_danger(Int) -> Int
+
+pub fn obstacle_clamp_non_negative(Int) -> Int
+
+pub fn obstacle_clamp_percent(Int) -> Int
+
+pub fn obstacle_distance_risk(Int, Int) -> Int
+
+pub fn obstacle_path_safe(Int) -> Bool
+
+pub fn obstacle_recommended_altitude(Int, Int, Int) -> Int
+
+pub fn obstacle_requires_avoidance(Int) -> Bool
+
+pub fn obstacle_risk_level(Int) -> String
+
+pub fn obstacle_risk_score(Int, Int, Int, Int) -> Int
+
+pub fn obstacle_route_penalty_minutes(Int, Bool) -> Int
+
+pub fn obstacle_safe_distance_meters(Int) -> Int
+
+pub fn obstacle_safety_level(Int) -> String
+
+pub fn obstacle_safety_score(Int, Int) -> Int
+
+pub fn obstacle_sensor_confidence_ok(Int) -> Bool
+
+pub fn obstacle_summary() -> Unit
+
+pub fn obstacle_type_building() -> Int
+
+pub fn obstacle_type_human() -> Int
+
+pub fn obstacle_type_name(Int) -> String
+
+pub fn obstacle_type_pole() -> Int
+
+pub fn obstacle_type_tree() -> Int
+
+pub fn obstacle_type_unknown() -> Int
+
+pub fn obstacle_type_wire() -> Int
+
+pub fn overlap_acceptable(Int) -> Bool
+
+pub fn overlap_level_name(Int) -> String
+
+pub fn overlap_percent(Int, Int) -> Int
+
+pub fn path_abs_diff(Int, Int) -> Int
+
+pub fn path_average_segment_length_meters(Int, Int) -> Int
+
+pub fn path_battery_feasible(Int, Int, Int) -> Bool
+
+pub fn path_battery_usage_percent(Int, Int) -> Int
+
+pub fn path_clamp_non_negative(Int) -> Int
+
+pub fn path_clamp_percent(Int) -> Int
+
+pub fn path_complexity_score(Int, Int, Int, Int) -> Int
+
+pub fn path_diagonal_distance_meters(Int, Int, Int, Int) -> Int
+
+pub fn path_duration_minutes(Int, Int) -> Int
+
+pub fn path_efficiency_score(Int, Int) -> Int
+
+pub fn path_geofence_detour_meters(Int, Int) -> Int
+
+pub fn path_manhattan_distance_meters(Int, Int, Int, Int) -> Int
+
+pub fn path_need_replan(Bool, Bool, Bool, Int) -> Bool
+
+pub fn path_obstacle_detour_meters(Int, Int) -> Int
+
+pub fn path_planning_summary() -> Unit
+
+pub fn path_risk_level(Int) -> String
+
+pub fn path_risk_score(Int, Int, Bool, Int) -> Int
+
+pub fn path_safety_score(Int, Int, Int, Int) -> Int
+
+pub fn path_segment_count(Int) -> Int
+
+pub fn path_strategy(Int, Int, Int, Bool) -> String
+
+pub fn path_total_distance_meters(Int, Int, Int, Int) -> Int
+
+pub fn path_turn_cost_meters(Int, Int) -> Int
+
+pub fn payload_action(Int, Bool, Bool) -> String
+
+pub fn payload_allowed(Int, Int) -> Bool
+
+pub fn payload_balance_score(Int, Int) -> Int
+
+pub fn payload_battery_penalty_percent(Int) -> Int
+
+pub fn payload_clamp_capacity(Int, Int) -> Int
+
+pub fn payload_clamp_non_negative(Int) -> Int
+
+pub fn payload_clamp_percent(Int) -> Int
+
+pub fn payload_enough(Int, Int) -> Bool
+
+pub fn payload_mission_count_before_refill(Int, Int) -> Int
+
+pub fn payload_need_refill(Int, Int, Int) -> Bool
+
+pub fn payload_percent(Int, Int) -> Int
+
+pub fn payload_refill_needed_liters(Int, Int) -> Int
+
+pub fn payload_remaining_liters(Int, Int) -> Int
+
+pub fn payload_required_liters(Int, Int) -> Int
+
+pub fn payload_risk_level(Int) -> String
+
+pub fn payload_risk_score(Int, Int, Bool, Bool) -> Int
+
+pub fn payload_speed_penalty_percent(Int) -> Int
+
+pub fn payload_spray_duration_minutes(Int, Int) -> Int
+
+pub fn payload_summary() -> Unit
+
+pub fn payload_usage_liters(Int, Int) -> Int
+
+pub fn payload_weight_kg(Int, Int) -> Int
+
+pub fn payload_weight_safe(Int, Int) -> Bool
+
+pub fn point_eq(Point, Point) -> Bool
+
+pub fn point_in_zone(FieldPoint, FieldZone) -> Bool
+
+pub fn queue_pressure(Int, Int, Int) -> Int
+
+pub fn queue_pressure_name(Int) -> String
+
+pub fn rad_to_deg(Double) -> Double
+
+pub fn rainfall_level_name(Int) -> String
+
+pub fn rainfall_safe_for_flight(Int) -> Bool
+
+pub fn ready_for_dispatch(Int, Int, Int, Int) -> Bool
+
+pub fn route_abs_diff(Int, Int) -> Int
+
+pub fn route_action(Int, Bool) -> String
+
+pub fn route_battery_usage_percent(Int, Int) -> Int
+
+pub fn route_can_start(Int, Int, Int) -> Bool
+
+pub fn route_clamp_non_negative(Int) -> Int
+
+pub fn route_clamp_percent(Int) -> Int
+
+pub fn route_distance_meters(Int, Int, Int, Int) -> Int
+
+pub fn route_duration_minutes(Int, Int) -> Int
+
+pub fn route_efficiency_score(Int, Int) -> Int
+
+pub fn route_need_split(Int, Int) -> Bool
+
+pub fn route_rectangular_distance_meters(Int, Int, Int) -> Int
+
+pub fn route_reserve_battery_percent(Int, Int) -> Int
+
+pub fn route_risk_level(Int) -> String
+
+pub fn route_risk_score(Int, Int, Int, Int) -> Int
+
+pub fn route_split_count(Int, Int) -> Int
+
+pub fn route_summary() -> Unit
+
+pub fn route_total_time_minutes(Int, Int, Int) -> Int
+
+pub fn route_turn_penalty_minutes(Int) -> Int
+
+pub fn route_waypoint_count(Int, Int, Int) -> Int
+
+pub fn scan_density(Int, Int) -> Int
+
+pub fn scan_density_name(Int) -> String
+
+pub fn schedule_score(Int, Int, Int, Int) -> Int
+
+pub fn schedule_state_cancelled() -> Int
+
+pub fn schedule_state_finished() -> Int
+
+pub fn schedule_state_name(Int) -> String
+
+pub fn schedule_state_paused() -> Int
+
+pub fn schedule_state_ready() -> Int
+
+pub fn schedule_state_running() -> Int
+
+pub fn schedule_state_waiting() -> Int
+
+pub fn scheduler_mode_name(Int) -> String
+
+pub fn scheduler_summary() -> Unit
+
+pub fn sensor_matches_mission(Int, Int) -> Bool
+
+pub fn sensor_quality_name(Int) -> String
+
+pub fn sensor_summary() -> Unit
+
+pub fn sensor_type_lidar() -> Int
+
+pub fn sensor_type_multispectral() -> Int
+
+pub fn sensor_type_name(Int) -> String
+
+pub fn sensor_type_rgb() -> Int
+
+pub fn sensor_type_soil() -> Int
+
+pub fn sensor_type_thermal() -> Int
+
+pub fn sensor_usable(Int) -> Bool
+
+pub fn should_pause_task(Bool, Bool, Bool) -> Bool
+
+pub fn should_raise_sensor_alert(Int) -> Bool
+
+pub fn should_reschedule(Int, Int, Int) -> Bool
+
+pub fn should_return_to_base(Int, Int) -> Bool
+
+pub fn should_run_before(Int, Int, Int, Int) -> Bool
+
+pub fn spray_area_per_minute(Int, Int) -> Int
+
+pub fn spray_base_flow_liter_per_minute(Int) -> Int
+
+pub fn spray_can_start(Int, Int, Int, Int, Int) -> Bool
+
+pub fn spray_clamp_non_negative(Int) -> Int
+
+pub fn spray_clamp_percent(Int) -> Int
+
+pub fn spray_coverage_percent(Int, Int) -> Int
+
+pub fn spray_duration_minutes(Int, Int, Int) -> Int
+
+pub fn spray_flow_liter_per_minute(Int, Int) -> Int
+
+pub fn spray_humidity_safe(Int) -> Bool
+
+pub fn spray_liquid_required_liter(Int, Int) -> Int
+
+pub fn spray_mode_high() -> Int
+
+pub fn spray_mode_low() -> Int
+
+pub fn spray_mode_name(Int) -> String
+
+pub fn spray_mode_normal() -> Int
+
+pub fn spray_mode_off() -> Int
+
+pub fn spray_nozzle_cone() -> Int
+
+pub fn spray_nozzle_fan() -> Int
+
+pub fn spray_nozzle_flow_bonus(Int) -> Int
+
+pub fn spray_nozzle_mist() -> Int
+
+pub fn spray_nozzle_name(Int) -> String
+
+pub fn spray_quality_level(Int) -> String
+
+pub fn spray_quality_score(Int, Int, Int, Int) -> Int
+
+pub fn spray_recommended_speed_mps(Int, Int) -> Int
+
+pub fn spray_refill_amount_liter(Int, Int) -> Int
+
+pub fn spray_refill_required(Int, Int) -> Bool
+
+pub fn spray_remaining_liter(Int, Int) -> Int
+
+pub fn spray_summary() -> Unit
+
+pub fn spray_tank_enough(Int, Int) -> Bool
+
+pub fn spray_temperature_safe(Int) -> Bool
+
+pub fn spray_weather_safe(Int, Int, Int) -> Bool
+
+pub fn spray_width_meters(Int, Int) -> Int
+
+pub fn spray_wind_safe(Int) -> Bool
+
+pub fn spraying_coverage_valid(Int, Int) -> Bool
+
+pub fn swarm_active_ratio_percent(Int, Int) -> Int
+
+pub fn swarm_average_load_percent(Int, Int) -> Int
+
+pub fn swarm_clamp_non_negative(Int) -> Int
+
+pub fn swarm_clamp_percent(Int) -> Int
+
+pub fn swarm_communication_quality_score(Int, Int, Int) -> Int
+
+pub fn swarm_coordination_score(Int, Int, Int) -> Int
+
+pub fn swarm_has_enough_drones(Int, Int) -> Bool
+
+pub fn swarm_mission_capacity_hectares(Int, Int) -> Int
+
+pub fn swarm_required_drones(Int, Int) -> Int
+
+pub fn swarm_should_rebalance(Int, Int, Int) -> Bool
+
+pub fn swarm_status(Int, Bool) -> String
+
+pub fn swarm_summary() -> Unit
+
+pub fn telemetry_alert_level(Int, Int, Int) -> Int
+
+pub fn telemetry_alert_name(Int) -> String
+
+pub fn telemetry_clamp_non_negative(Int) -> Int
+
+pub fn telemetry_clamp_percent(Int) -> Int
+
+pub fn telemetry_command_channel_safe(Int, Int, Int) -> Bool
+
+pub fn telemetry_data_freshness_name(Int) -> String
+
+pub fn telemetry_data_freshness_score(Int) -> Int
+
+pub fn telemetry_downlink_quality(Int, Int, Int) -> Int
+
+pub fn telemetry_health_name(Int) -> String
+
+pub fn telemetry_health_score(Int, Int, Int, Int, Int, Int) -> Int
+
+pub fn telemetry_heartbeat_name(Int) -> String
+
+pub fn telemetry_heartbeat_reliability(Int, Int) -> Int
+
+pub fn telemetry_latency_name(Int) -> String
+
+pub fn telemetry_latency_quality(Int) -> Int
+
+pub fn telemetry_link_lte() -> Int
+
+pub fn telemetry_link_mesh() -> Int
+
+pub fn telemetry_link_name(Int) -> String
+
+pub fn telemetry_link_radio() -> Int
+
+pub fn telemetry_link_satellite() -> Int
+
+pub fn telemetry_mode_name(Int) -> String
+
+pub fn telemetry_packet_loss_name(Int) -> String
+
+pub fn telemetry_packet_quality(Int) -> Int
+
+pub fn telemetry_recommended_mode(Int, Int, Int) -> Int
+
+pub fn telemetry_reconnect_risk(Int, Int, Int) -> Int
+
+pub fn telemetry_reconnect_risk_name(Int) -> String
+
+pub fn telemetry_requires_rtb(Int, Int) -> Bool
+
+pub fn telemetry_signal_level_name(Int) -> String
+
+pub fn telemetry_signal_quality(Int) -> Int
+
+pub fn telemetry_status_degraded() -> Int
+
+pub fn telemetry_status_from_health(Int) -> Int
+
+pub fn telemetry_status_good() -> Int
+
+pub fn telemetry_status_lost() -> Int
+
+pub fn telemetry_status_name(Int) -> String
+
+pub fn telemetry_status_unstable() -> Int
+
+pub fn telemetry_summary() -> Unit
+
+pub fn telemetry_uplink_quality(Int, Int, Int) -> Int
+
+pub fn telemetry_usable_for_mission(Int) -> Bool
+
+pub fn telemetry_usable_for_precision(Int, Int) -> Bool
+
+pub fn telemetry_video_stream_stable(Int, Int, Int) -> Bool
+
+pub fn total_crop_area(FarmField) -> Int
+
+pub fn visibility_level_name(Int) -> String
+
+pub fn visibility_safe_for_flight(Int) -> Bool
+
+pub fn waiting_penalty(Int) -> Int
+
+pub fn weather_adjusted_flight_cost(Int, Int) -> Int
+
+pub fn weather_clear() -> Int
+
+pub fn weather_cloudy() -> Int
+
+pub fn weather_foggy() -> Int
+
+pub fn weather_kind_safe_for_flight(Int) -> Bool
+
+pub fn weather_name(Int) -> String
+
+pub fn weather_rainy() -> Int
+
+pub fn weather_requires_delay(Int) -> Bool
+
+pub fn weather_requires_return(Int, Int, Int, Int) -> Bool
+
+pub fn weather_risk_level_name(Int) -> String
+
+pub fn weather_risk_score(Int, Int, Int, Int) -> Int
+
+pub fn weather_safe_for_flight(Int, Int, Int, Int) -> Bool
+
+pub fn weather_storm() -> Int
+
+pub fn weather_suitable_for_spraying(Int, Int, Int, Int) -> Bool
+
+pub fn weather_summary() -> Unit
+
+pub fn weather_windy() -> Int
+
+pub fn wind_battery_penalty(Int, Int) -> Int
+
+pub fn wind_level_name(Int) -> String
+
+pub fn wind_safe_for_flight(Int) -> Bool
+
+pub fn workload_level_name(Int) -> String
+
+pub fn zone_area(FieldZone) -> Int
+
+// Errors
+
+// Types and methods
+pub struct Drone {
+  position : Vector2D
+  velocity : Vector2D
+  max_speed : Double
+}
+pub fn Drone::limit_speed(Self) -> Self
+pub fn Drone::new(Vector2D, Vector2D, Double) -> Self
+pub fn Drone::step(Self) -> Self
+
+pub struct DroneState {
+  id : Int
+  pos_x : Double
+  pos_y : Double
+  pos_z : Double
+  velocity_x : Double
+  velocity_y : Double
+  velocity_z : Double
+  battery : Double
+}
+
+pub struct FarmField {
+  size : FieldSize
+  crop_zones : Array[FieldZone]
+  obstacles : Array[FieldObstacle]
+  bases : Array[FieldBase]
+}
+
+pub struct FieldBase {
+  id : Int
+  pos : FieldPoint
+  name : String
+}
+
+pub struct FieldObstacle {
+  id : Int
+  pos : FieldPoint
+  radius : Int
+}
+
+pub struct FieldPoint {
+  x : Int
+  y : Int
+}
+
+pub struct FieldSize {
+  width : Int
+  height : Int
+}
+
+pub struct FieldZone {
+  id : Int
+  name : String
+  min_x : Int
+  min_y : Int
+  max_x : Int
+  max_y : Int
+}
+
+pub struct Matrix3 {
+  data : Array[Array[Double]]
+}
+pub fn Matrix3::add(Self, Self) -> Self
+pub fn Matrix3::adjugate(Self) -> Self
+pub fn Matrix3::det(Self) -> Double
+pub fn Matrix3::identity() -> Self
+pub fn Matrix3::inverse(Self) -> Self?
+pub fn Matrix3::mul(Self, Self) -> Self
+pub fn Matrix3::new(Array[Array[Double]]) -> Self
+pub fn Matrix3::scalar_mul(Self, Double) -> Self
+pub fn Matrix3::sub(Self, Self) -> Self
+pub fn Matrix3::transpose(Self) -> Self
+pub fn Matrix3::zero() -> Self
+
+pub struct PID {
+  kp : Double
+  ki : Double
+  kd : Double
+  setpoint : Double
+  integral : Double
+  prev_error : Double
+}
+pub fn PID::new(Double, Double, Double) -> Self
+pub fn PID::set_setpoint(Self, Double) -> Self
+pub fn PID::update(Self, Double, Double) -> Double
+
+pub struct Point {
+  x : Int
+  y : Int
+}
+pub fn Point::new(Int, Int) -> Self
+
+pub struct SimEvent {
+  time : Double
+  drone_id : Int
+  event_type : String
+  message : String
+}
+
+pub struct Simulation {
+  time : Double
+  drones : Array[DroneState]
+  events : Array[SimEvent]
+}
+pub fn Simulation::add_drone(Self, DroneState) -> Self
+pub fn Simulation::get_drone(Self, Int) -> DroneState?
+pub fn Simulation::get_events(Self) -> Array[SimEvent]
+pub fn Simulation::get_time(Self) -> Double
+pub fn Simulation::log_event(Self, Int, String, String) -> Self
+pub fn Simulation::new() -> Self
+pub fn Simulation::step(Self, Double) -> Self
+
+pub struct Swarm {
+  drones : Array[Drone]
+}
+pub fn Swarm::add_drone(Self, Drone) -> Self
+pub fn Swarm::alignment_score(Self) -> Double
+pub fn Swarm::all_within_radius(Self, Vector2D, Double) -> Bool
+pub fn Swarm::any_within_radius(Self, Vector2D, Double) -> Bool
+pub fn Swarm::arrival_ratio(Self, Vector2D, Double) -> Double
+pub fn Swarm::average_distance_from_center(Self) -> Double
+pub fn Swarm::average_speed(Self) -> Double
+pub fn Swarm::average_velocity(Self) -> Vector2D
+pub fn Swarm::center(Self) -> Vector2D
+pub fn Swarm::cohesion_score(Self) -> Double
+pub fn Swarm::count_within_radius(Self, Vector2D, Double) -> Int
+pub fn Swarm::coverage_radius(Self, Vector2D) -> Double
+pub fn Swarm::farthest_distance_to(Self, Vector2D) -> Double
+pub fn Swarm::formation_quality(Self) -> Double
+pub fn Swarm::is_aligned(Self, Double) -> Bool
+pub fn Swarm::is_empty(Self) -> Bool
+pub fn Swarm::is_mission_complete(Self, Vector2D, Double) -> Bool
+pub fn Swarm::is_operational(Self) -> Bool
+pub fn Swarm::is_ready_for_task(Self, Double, Double) -> Bool
+pub fn Swarm::is_too_spread(Self, Double) -> Bool
+pub fn Swarm::max_distance_from_center(Self) -> Double
+pub fn Swarm::mission_progress(Self, Vector2D, Double) -> Double
+pub fn Swarm::nearest_distance_to(Self, Vector2D) -> Double
+pub fn Swarm::needs_regroup(Self, Double, Double) -> Bool
+pub fn Swarm::new(Array[Drone]) -> Self
+pub fn Swarm::size(Self) -> Int
+pub fn Swarm::status_score(Self) -> Double
+pub fn Swarm::step(Self) -> Self
+pub fn Swarm::task_readiness_score(Self) -> Double
+
+pub struct Vector2D {
+  x : Double
+  y : Double
+}
+pub fn Vector2D::add(Self, Self) -> Self
+pub fn Vector2D::dot(Self, Self) -> Double
+pub fn Vector2D::length(Self) -> Double
+pub fn Vector2D::new(Double, Double) -> Self
+pub fn Vector2D::normalize(Self) -> Self
+pub fn Vector2D::scale(Self, Double) -> Self
+pub fn Vector2D::sub(Self, Self) -> Self
+
+pub struct Vector3D {
+  x : Double
+  y : Double
+  z : Double
+}
+pub fn Vector3D::add(Self, Self) -> Self
+pub fn Vector3D::cross(Self, Self) -> Self
+pub fn Vector3D::dot(Self, Self) -> Double
+pub fn Vector3D::length(Self) -> Double
+pub fn Vector3D::new(Double, Double, Double) -> Self
+pub fn Vector3D::scale(Self, Double) -> Self
+pub fn Vector3D::sub(Self, Self) -> Self
+
+// Type aliases
+
+// Traits
+
