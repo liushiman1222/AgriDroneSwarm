@@ -1,4 +1,5 @@
 // simulation.mbt - 确定性仿真框架
+
 ///|
 pub struct DroneState {
   id : Int

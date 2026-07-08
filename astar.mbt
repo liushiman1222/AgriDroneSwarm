@@ -1,4 +1,5 @@
 // astar.mbt - A* 路径规划
+
 ///|
 pub struct Point {
   x : Int
