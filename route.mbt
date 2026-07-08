@@ -4,7 +4,7 @@
 
 ///|
 /// Clamp non-negative integer.
-pub fn route_clamp_non_negative(value: Int) -> Int {
+pub fn route_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -14,7 +14,7 @@ pub fn route_clamp_non_negative(value: Int) -> Int {
 
 ///|
 /// Clamp percent to 0..100.
-pub fn route_clamp_percent(value: Int) -> Int {
+pub fn route_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -26,7 +26,7 @@ pub fn route_clamp_percent(value: Int) -> Int {
 
 ///|
 /// Absolute difference.
-pub fn route_abs_diff(a: Int, b: Int) -> Int {
+pub fn route_abs_diff(a : Int, b : Int) -> Int {
   if a >= b {
     a - b
   } else {
@@ -36,16 +36,16 @@ pub fn route_abs_diff(a: Int, b: Int) -> Int {
 
 ///|
 /// Manhattan distance between two points.
-pub fn route_distance_meters(x1: Int, y1: Int, x2: Int, y2: Int) -> Int {
+pub fn route_distance_meters(x1 : Int, y1 : Int, x2 : Int, y2 : Int) -> Int {
   route_abs_diff(x1, x2) + route_abs_diff(y1, y2)
 }
 
 ///|
 /// Estimate total route distance for a simple rectangular pattern.
 pub fn route_rectangular_distance_meters(
-  width_meters: Int,
-  height_meters: Int,
-  lane_spacing_meters: Int
+  width_meters : Int,
+  height_meters : Int,
+  lane_spacing_meters : Int,
 ) -> Int {
   let width = route_clamp_non_negative(width_meters)
   let height = route_clamp_non_negative(height_meters)
@@ -62,9 +62,9 @@ pub fn route_rectangular_distance_meters(
 ///|
 /// Estimate waypoint count.
 pub fn route_waypoint_count(
-  width_meters: Int,
-  height_meters: Int,
-  lane_spacing_meters: Int
+  width_meters : Int,
+  height_meters : Int,
+  lane_spacing_meters : Int,
 ) -> Int {
   let width = route_clamp_non_negative(width_meters)
   let height = route_clamp_non_negative(height_meters)
@@ -80,7 +80,7 @@ pub fn route_waypoint_count(
 
 ///|
 /// Estimate route duration in minutes.
-pub fn route_duration_minutes(distance_meters: Int, speed_mps: Int) -> Int {
+pub fn route_duration_minutes(distance_meters : Int, speed_mps : Int) -> Int {
   let distance = route_clamp_non_negative(distance_meters)
   let speed = route_clamp_non_negative(speed_mps)
 
@@ -94,7 +94,7 @@ pub fn route_duration_minutes(distance_meters: Int, speed_mps: Int) -> Int {
 
 ///|
 /// Estimate turn penalty minutes.
-pub fn route_turn_penalty_minutes(waypoint_count: Int) -> Int {
+pub fn route_turn_penalty_minutes(waypoint_count : Int) -> Int {
   let count = route_clamp_non_negative(waypoint_count)
   count / 6
 }
@@ -102,9 +102,9 @@ pub fn route_turn_penalty_minutes(waypoint_count: Int) -> Int {
 ///|
 /// Estimate total route time.
 pub fn route_total_time_minutes(
-  distance_meters: Int,
-  speed_mps: Int,
-  waypoint_count: Int
+  distance_meters : Int,
+  speed_mps : Int,
+  waypoint_count : Int,
 ) -> Int {
   route_duration_minutes(distance_meters, speed_mps) +
   route_turn_penalty_minutes(waypoint_count)
@@ -113,8 +113,8 @@ pub fn route_total_time_minutes(
 ///|
 /// Estimate route battery usage percent.
 pub fn route_battery_usage_percent(
-  total_time_minutes: Int,
-  battery_drain_per_minute: Int
+  total_time_minutes : Int,
+  battery_drain_per_minute : Int,
 ) -> Int {
   let time = route_clamp_non_negative(total_time_minutes)
   let drain = route_clamp_non_negative(battery_drain_per_minute)
@@ -124,8 +124,8 @@ pub fn route_battery_usage_percent(
 ///|
 /// Estimate route coverage efficiency.
 pub fn route_efficiency_score(
-  field_area_square_meter: Int,
-  distance_meters: Int
+  field_area_square_meter : Int,
+  distance_meters : Int,
 ) -> Int {
   let area = route_clamp_non_negative(field_area_square_meter)
   let distance = route_clamp_non_negative(distance_meters)
@@ -140,10 +140,10 @@ pub fn route_efficiency_score(
 ///|
 /// Estimate route risk score.
 pub fn route_risk_score(
-  obstacle_risk: Int,
-  geofence_risk: Int,
-  weather_risk: Int,
-  battery_usage: Int
+  obstacle_risk : Int,
+  geofence_risk : Int,
+  weather_risk : Int,
+  battery_usage : Int,
 ) -> Int {
   let obstacle = route_clamp_percent(obstacle_risk)
   let geofence = route_clamp_percent(geofence_risk)
@@ -155,7 +155,7 @@ pub fn route_risk_score(
 
 ///|
 /// Convert route risk score to level.
-pub fn route_risk_level(score: Int) -> String {
+pub fn route_risk_level(score : Int) -> String {
   let safe_score = route_clamp_percent(score)
 
   if safe_score >= 80 {
@@ -172,9 +172,9 @@ pub fn route_risk_level(score: Int) -> String {
 ///|
 /// Check whether route can start.
 pub fn route_can_start(
-  risk_score: Int,
-  battery_percent: Int,
-  required_battery_percent: Int
+  risk_score : Int,
+  battery_percent : Int,
+  required_battery_percent : Int,
 ) -> Bool {
   let risk = route_clamp_percent(risk_score)
   let battery = route_clamp_percent(battery_percent)
@@ -185,10 +185,7 @@ pub fn route_can_start(
 
 ///|
 /// Recommend route action.
-pub fn route_action(
-  risk_score: Int,
-  can_start: Bool
-) -> String {
+pub fn route_action(risk_score : Int, can_start : Bool) -> String {
   let risk = route_clamp_percent(risk_score)
 
   if !can_start {
@@ -205,8 +202,8 @@ pub fn route_action(
 ///|
 /// Estimate reserve battery after route.
 pub fn route_reserve_battery_percent(
-  battery_percent: Int,
-  usage_percent: Int
+  battery_percent : Int,
+  usage_percent : Int,
 ) -> Int {
   let battery = route_clamp_percent(battery_percent)
   let usage = route_clamp_percent(usage_percent)
@@ -221,8 +218,8 @@ pub fn route_reserve_battery_percent(
 ///|
 /// Check whether route needs split.
 pub fn route_need_split(
-  total_time_minutes: Int,
-  max_single_flight_minutes: Int
+  total_time_minutes : Int,
+  max_single_flight_minutes : Int,
 ) -> Bool {
   route_clamp_non_negative(total_time_minutes) >
   route_clamp_non_negative(max_single_flight_minutes)
@@ -231,8 +228,8 @@ pub fn route_need_split(
 ///|
 /// Estimate split count.
 pub fn route_split_count(
-  total_time_minutes: Int,
-  max_single_flight_minutes: Int
+  total_time_minutes : Int,
+  max_single_flight_minutes : Int,
 ) -> Int {
   let total = route_clamp_non_negative(total_time_minutes)
   let max_time = route_clamp_non_negative(max_single_flight_minutes)
@@ -258,8 +255,12 @@ pub fn route_summary() -> Unit {
   let geofence_risk = 28
   let weather_risk = 35
 
-  let distance = route_rectangular_distance_meters(field_width, field_height, lane_spacing)
-  let waypoint_count = route_waypoint_count(field_width, field_height, lane_spacing)
+  let distance = route_rectangular_distance_meters(
+    field_width, field_height, lane_spacing,
+  )
+  let waypoint_count = route_waypoint_count(
+    field_width, field_height, lane_spacing,
+  )
   let duration = route_duration_minutes(distance, speed)
   let turn_penalty = route_turn_penalty_minutes(waypoint_count)
   let total_time = route_total_time_minutes(distance, speed, waypoint_count)
@@ -273,7 +274,13 @@ pub fn route_summary() -> Unit {
   let need_split = route_need_split(total_time, max_single_flight)
   let split_count = route_split_count(total_time, max_single_flight)
 
-  println("Route field size: " + field_width.to_string() + " x " + field_height.to_string() + " m")
+  println(
+    "Route field size: " +
+    field_width.to_string() +
+    " x " +
+    field_height.to_string() +
+    " m",
+  )
   println("Route lane spacing: " + lane_spacing.to_string() + " m")
   println("Route distance: " + distance.to_string() + " m")
   println("Route waypoint count: " + waypoint_count.to_string())

@@ -30,7 +30,7 @@ pub fn telemetry_link_mesh() -> Int {
 
 ///|
 /// Convert telemetry link type to readable text.
-pub fn telemetry_link_name(link: Int) -> String {
+pub fn telemetry_link_name(link : Int) -> String {
   match link {
     0 => "radio"
     1 => "lte"
@@ -66,7 +66,7 @@ pub fn telemetry_status_lost() -> Int {
 
 ///|
 /// Convert telemetry status to readable text.
-pub fn telemetry_status_name(status: Int) -> String {
+pub fn telemetry_status_name(status : Int) -> String {
   match status {
     0 => "good"
     1 => "degraded"
@@ -78,7 +78,7 @@ pub fn telemetry_status_name(status: Int) -> String {
 
 ///|
 /// Clamp percent into 0..100.
-pub fn telemetry_clamp_percent(value: Int) -> Int {
+pub fn telemetry_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -90,7 +90,7 @@ pub fn telemetry_clamp_percent(value: Int) -> Int {
 
 ///|
 /// Clamp non-negative integer.
-pub fn telemetry_clamp_non_negative(value: Int) -> Int {
+pub fn telemetry_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -102,13 +102,13 @@ pub fn telemetry_clamp_non_negative(value: Int) -> Int {
 /// Estimate signal quality from RSSI-like value.
 ///
 /// signal_strength is expected in 0..100.
-pub fn telemetry_signal_quality(signal_strength: Int) -> Int {
+pub fn telemetry_signal_quality(signal_strength : Int) -> Int {
   telemetry_clamp_percent(signal_strength)
 }
 
 ///|
 /// Convert signal quality to readable level.
-pub fn telemetry_signal_level_name(signal_quality: Int) -> String {
+pub fn telemetry_signal_level_name(signal_quality : Int) -> String {
   let q = telemetry_clamp_percent(signal_quality)
   if q >= 85 {
     "excellent"
@@ -123,14 +123,14 @@ pub fn telemetry_signal_level_name(signal_quality: Int) -> String {
 
 ///|
 /// Estimate packet delivery quality.
-pub fn telemetry_packet_quality(packet_loss_percent: Int) -> Int {
+pub fn telemetry_packet_quality(packet_loss_percent : Int) -> Int {
   let loss = telemetry_clamp_percent(packet_loss_percent)
   100 - loss
 }
 
 ///|
 /// Convert packet loss to readable level.
-pub fn telemetry_packet_loss_name(packet_loss_percent: Int) -> String {
+pub fn telemetry_packet_loss_name(packet_loss_percent : Int) -> String {
   let loss = telemetry_clamp_percent(packet_loss_percent)
   if loss >= 40 {
     "critical"
@@ -145,7 +145,7 @@ pub fn telemetry_packet_loss_name(packet_loss_percent: Int) -> String {
 
 ///|
 /// Estimate latency quality.
-pub fn telemetry_latency_quality(latency_ms: Int) -> Int {
+pub fn telemetry_latency_quality(latency_ms : Int) -> Int {
   let latency = telemetry_clamp_non_negative(latency_ms)
   if latency <= 50 {
     100
@@ -162,7 +162,7 @@ pub fn telemetry_latency_quality(latency_ms: Int) -> Int {
 
 ///|
 /// Convert latency to readable level.
-pub fn telemetry_latency_name(latency_ms: Int) -> String {
+pub fn telemetry_latency_name(latency_ms : Int) -> String {
   let latency = telemetry_clamp_non_negative(latency_ms)
   if latency <= 50 {
     "real-time"
@@ -179,7 +179,11 @@ pub fn telemetry_latency_name(latency_ms: Int) -> String {
 
 ///|
 /// Estimate uplink quality.
-pub fn telemetry_uplink_quality(signal_quality: Int, packet_loss_percent: Int, latency_ms: Int) -> Int {
+pub fn telemetry_uplink_quality(
+  signal_quality : Int,
+  packet_loss_percent : Int,
+  latency_ms : Int,
+) -> Int {
   let signal = telemetry_clamp_percent(signal_quality)
   let packet = telemetry_packet_quality(packet_loss_percent)
   let latency = telemetry_latency_quality(latency_ms)
@@ -188,7 +192,11 @@ pub fn telemetry_uplink_quality(signal_quality: Int, packet_loss_percent: Int, l
 
 ///|
 /// Estimate downlink quality.
-pub fn telemetry_downlink_quality(signal_quality: Int, packet_loss_percent: Int, latency_ms: Int) -> Int {
+pub fn telemetry_downlink_quality(
+  signal_quality : Int,
+  packet_loss_percent : Int,
+  latency_ms : Int,
+) -> Int {
   let signal = telemetry_clamp_percent(signal_quality)
   let packet = telemetry_packet_quality(packet_loss_percent)
   let latency = telemetry_latency_quality(latency_ms)
@@ -198,21 +206,23 @@ pub fn telemetry_downlink_quality(signal_quality: Int, packet_loss_percent: Int,
 ///|
 /// Estimate total telemetry health score.
 pub fn telemetry_health_score(
-  uplink_signal: Int,
-  uplink_loss: Int,
-  uplink_latency: Int,
-  downlink_signal: Int,
-  downlink_loss: Int,
-  downlink_latency: Int
+  uplink_signal : Int,
+  uplink_loss : Int,
+  uplink_latency : Int,
+  downlink_signal : Int,
+  downlink_loss : Int,
+  downlink_latency : Int,
 ) -> Int {
   let up = telemetry_uplink_quality(uplink_signal, uplink_loss, uplink_latency)
-  let down = telemetry_downlink_quality(downlink_signal, downlink_loss, downlink_latency)
+  let down = telemetry_downlink_quality(
+    downlink_signal, downlink_loss, downlink_latency,
+  )
   telemetry_clamp_percent(up * 5 / 10 + down * 5 / 10)
 }
 
 ///|
 /// Convert telemetry health score to status.
-pub fn telemetry_status_from_health(health: Int) -> Int {
+pub fn telemetry_status_from_health(health : Int) -> Int {
   let h = telemetry_clamp_percent(health)
   if h >= 75 {
     telemetry_status_good()
@@ -227,31 +237,37 @@ pub fn telemetry_status_from_health(health: Int) -> Int {
 
 ///|
 /// Convert telemetry health score to readable level.
-pub fn telemetry_health_name(health: Int) -> String {
+pub fn telemetry_health_name(health : Int) -> String {
   telemetry_status_name(telemetry_status_from_health(health))
 }
 
 ///|
 /// Check whether telemetry is usable for normal mission.
-pub fn telemetry_usable_for_mission(health: Int) -> Bool {
+pub fn telemetry_usable_for_mission(health : Int) -> Bool {
   telemetry_clamp_percent(health) >= 55
 }
 
 ///|
 /// Check whether telemetry is usable for precision mission.
-pub fn telemetry_usable_for_precision(health: Int, latency_ms: Int) -> Bool {
-  telemetry_clamp_percent(health) >= 75 && telemetry_clamp_non_negative(latency_ms) <= 150
+pub fn telemetry_usable_for_precision(health : Int, latency_ms : Int) -> Bool {
+  telemetry_clamp_percent(health) >= 75 &&
+  telemetry_clamp_non_negative(latency_ms) <= 150
 }
 
 ///|
 /// Check whether telemetry requires return-to-base.
-pub fn telemetry_requires_rtb(health: Int, packet_loss_percent: Int) -> Bool {
-  telemetry_clamp_percent(health) < 30 || telemetry_clamp_percent(packet_loss_percent) >= 45
+pub fn telemetry_requires_rtb(health : Int, packet_loss_percent : Int) -> Bool {
+  telemetry_clamp_percent(health) < 30 ||
+  telemetry_clamp_percent(packet_loss_percent) >= 45
 }
 
 ///|
 /// Estimate reconnect risk score.
-pub fn telemetry_reconnect_risk(reconnect_count: Int, packet_loss_percent: Int, signal_quality: Int) -> Int {
+pub fn telemetry_reconnect_risk(
+  reconnect_count : Int,
+  packet_loss_percent : Int,
+  signal_quality : Int,
+) -> Int {
   let reconnect = telemetry_clamp_non_negative(reconnect_count)
   let loss = telemetry_clamp_percent(packet_loss_percent)
   let signal = telemetry_clamp_percent(signal_quality)
@@ -260,7 +276,7 @@ pub fn telemetry_reconnect_risk(reconnect_count: Int, packet_loss_percent: Int, 
 
 ///|
 /// Convert reconnect risk to readable text.
-pub fn telemetry_reconnect_risk_name(risk: Int) -> String {
+pub fn telemetry_reconnect_risk_name(risk : Int) -> String {
   let r = telemetry_clamp_percent(risk)
   if r >= 80 {
     "critical"
@@ -275,7 +291,7 @@ pub fn telemetry_reconnect_risk_name(risk: Int) -> String {
 
 ///|
 /// Estimate data freshness score.
-pub fn telemetry_data_freshness_score(last_update_seconds: Int) -> Int {
+pub fn telemetry_data_freshness_score(last_update_seconds : Int) -> Int {
   let age = telemetry_clamp_non_negative(last_update_seconds)
   if age <= 1 {
     100
@@ -292,7 +308,7 @@ pub fn telemetry_data_freshness_score(last_update_seconds: Int) -> Int {
 
 ///|
 /// Convert data freshness to readable text.
-pub fn telemetry_data_freshness_name(last_update_seconds: Int) -> String {
+pub fn telemetry_data_freshness_name(last_update_seconds : Int) -> String {
   let age = telemetry_clamp_non_negative(last_update_seconds)
   if age <= 1 {
     "live"
@@ -310,9 +326,9 @@ pub fn telemetry_data_freshness_name(last_update_seconds: Int) -> String {
 ///|
 /// Check whether command channel is safe.
 pub fn telemetry_command_channel_safe(
-  health: Int,
-  latency_ms: Int,
-  packet_loss_percent: Int
+  health : Int,
+  latency_ms : Int,
+  packet_loss_percent : Int,
 ) -> Bool {
   telemetry_clamp_percent(health) >= 65 &&
   telemetry_clamp_non_negative(latency_ms) <= 250 &&
@@ -322,11 +338,13 @@ pub fn telemetry_command_channel_safe(
 ///|
 /// Check whether video stream is stable.
 pub fn telemetry_video_stream_stable(
-  downlink_signal: Int,
-  packet_loss_percent: Int,
-  latency_ms: Int
+  downlink_signal : Int,
+  packet_loss_percent : Int,
+  latency_ms : Int,
 ) -> Bool {
-  let quality = telemetry_downlink_quality(downlink_signal, packet_loss_percent, latency_ms)
+  let quality = telemetry_downlink_quality(
+    downlink_signal, packet_loss_percent, latency_ms,
+  )
   quality >= 60 && telemetry_clamp_percent(packet_loss_percent) <= 25
 }
 
@@ -334,7 +352,11 @@ pub fn telemetry_video_stream_stable(
 /// Estimate recommended telemetry mode.
 ///
 /// 0 = normal, 1 = low-bandwidth, 2 = emergency.
-pub fn telemetry_recommended_mode(health: Int, packet_loss_percent: Int, latency_ms: Int) -> Int {
+pub fn telemetry_recommended_mode(
+  health : Int,
+  packet_loss_percent : Int,
+  latency_ms : Int,
+) -> Int {
   let h = telemetry_clamp_percent(health)
   let loss = telemetry_clamp_percent(packet_loss_percent)
   let latency = telemetry_clamp_non_negative(latency_ms)
@@ -349,7 +371,7 @@ pub fn telemetry_recommended_mode(health: Int, packet_loss_percent: Int, latency
 
 ///|
 /// Convert telemetry mode to readable text.
-pub fn telemetry_mode_name(mode: Int) -> String {
+pub fn telemetry_mode_name(mode : Int) -> String {
   match mode {
     0 => "normal"
     1 => "low-bandwidth"
@@ -360,7 +382,10 @@ pub fn telemetry_mode_name(mode: Int) -> String {
 
 ///|
 /// Estimate heartbeat reliability.
-pub fn telemetry_heartbeat_reliability(expected_count: Int, received_count: Int) -> Int {
+pub fn telemetry_heartbeat_reliability(
+  expected_count : Int,
+  received_count : Int,
+) -> Int {
   let expected = telemetry_clamp_non_negative(expected_count)
   let received = telemetry_clamp_non_negative(received_count)
   if expected <= 0 {
@@ -374,7 +399,7 @@ pub fn telemetry_heartbeat_reliability(expected_count: Int, received_count: Int)
 
 ///|
 /// Convert heartbeat reliability to readable text.
-pub fn telemetry_heartbeat_name(reliability: Int) -> String {
+pub fn telemetry_heartbeat_name(reliability : Int) -> String {
   let r = telemetry_clamp_percent(reliability)
   if r >= 95 {
     "stable"
@@ -390,9 +415,9 @@ pub fn telemetry_heartbeat_name(reliability: Int) -> String {
 ///|
 /// Estimate telemetry alert level.
 pub fn telemetry_alert_level(
-  health: Int,
-  reconnect_risk: Int,
-  heartbeat_reliability: Int
+  health : Int,
+  reconnect_risk : Int,
+  heartbeat_reliability : Int,
 ) -> Int {
   let h = telemetry_clamp_percent(health)
   let risk = telemetry_clamp_percent(reconnect_risk)
@@ -410,7 +435,7 @@ pub fn telemetry_alert_level(
 
 ///|
 /// Convert telemetry alert level to readable text.
-pub fn telemetry_alert_name(level: Int) -> String {
+pub fn telemetry_alert_name(level : Int) -> String {
   match level {
     0 => "none"
     1 => "notice"

@@ -6,7 +6,7 @@
 
 ///|
 /// Clamp percentage into 0..100.
-pub fn clamp_percent(value: Int) -> Int {
+pub fn clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -18,7 +18,11 @@ pub fn clamp_percent(value: Int) -> Int {
 
 ///|
 /// Estimate covered area by flight strips.
-pub fn estimate_covered_area(strip_count: Int, strip_length: Int, scan_width: Int) -> Int {
+pub fn estimate_covered_area(
+  strip_count : Int,
+  strip_length : Int,
+  scan_width : Int,
+) -> Int {
   let safe_count = if strip_count < 0 { 0 } else { strip_count }
   let safe_length = if strip_length < 0 { 0 } else { strip_length }
   let safe_width = if scan_width < 0 { 0 } else { scan_width }
@@ -27,7 +31,7 @@ pub fn estimate_covered_area(strip_count: Int, strip_length: Int, scan_width: In
 
 ///|
 /// Estimate coverage percent.
-pub fn coverage_percent(covered_area: Int, field_area: Int) -> Int {
+pub fn coverage_percent(covered_area : Int, field_area : Int) -> Int {
   if field_area <= 0 {
     0
   } else {
@@ -37,7 +41,7 @@ pub fn coverage_percent(covered_area: Int, field_area: Int) -> Int {
 
 ///|
 /// Convert coverage percent to readable level.
-pub fn coverage_level_name(percent: Int) -> String {
+pub fn coverage_level_name(percent : Int) -> String {
   let safe_percent = clamp_percent(percent)
   if safe_percent >= 95 {
     "complete"
@@ -52,7 +56,7 @@ pub fn coverage_level_name(percent: Int) -> String {
 
 ///|
 /// Estimate overlap percent from spacing and scan width.
-pub fn overlap_percent(scan_width: Int, line_spacing: Int) -> Int {
+pub fn overlap_percent(scan_width : Int, line_spacing : Int) -> Int {
   if scan_width <= 0 {
     0
   } else if line_spacing <= 0 {
@@ -66,7 +70,7 @@ pub fn overlap_percent(scan_width: Int, line_spacing: Int) -> Int {
 
 ///|
 /// Convert overlap percent to readable level.
-pub fn overlap_level_name(percent: Int) -> String {
+pub fn overlap_level_name(percent : Int) -> String {
   let safe_percent = clamp_percent(percent)
   if safe_percent >= 50 {
     "excessive"
@@ -81,14 +85,14 @@ pub fn overlap_level_name(percent: Int) -> String {
 
 ///|
 /// Check whether overlap is acceptable.
-pub fn overlap_acceptable(percent: Int) -> Bool {
+pub fn overlap_acceptable(percent : Int) -> Bool {
   let safe_percent = clamp_percent(percent)
   safe_percent >= 8 && safe_percent <= 35
 }
 
 ///|
 /// Estimate missing area.
-pub fn missing_area(field_area: Int, covered_area: Int) -> Int {
+pub fn missing_area(field_area : Int, covered_area : Int) -> Int {
   let safe_field = if field_area < 0 { 0 } else { field_area }
   let safe_covered = if covered_area < 0 { 0 } else { covered_area }
   if safe_covered >= safe_field {
@@ -100,7 +104,7 @@ pub fn missing_area(field_area: Int, covered_area: Int) -> Int {
 
 ///|
 /// Estimate missing percent.
-pub fn missing_percent(field_area: Int, covered_area: Int) -> Int {
+pub fn missing_percent(field_area : Int, covered_area : Int) -> Int {
   if field_area <= 0 {
     100
   } else {
@@ -110,7 +114,7 @@ pub fn missing_percent(field_area: Int, covered_area: Int) -> Int {
 
 ///|
 /// Convert missing percent to readable level.
-pub fn missing_level_name(percent: Int) -> String {
+pub fn missing_level_name(percent : Int) -> String {
   let safe_percent = clamp_percent(percent)
   if safe_percent >= 30 {
     "severe"
@@ -125,7 +129,7 @@ pub fn missing_level_name(percent: Int) -> String {
 
 ///|
 /// Estimate scan density.
-pub fn scan_density(sample_count: Int, field_area: Int) -> Int {
+pub fn scan_density(sample_count : Int, field_area : Int) -> Int {
   if sample_count <= 0 || field_area <= 0 {
     0
   } else {
@@ -135,7 +139,7 @@ pub fn scan_density(sample_count: Int, field_area: Int) -> Int {
 
 ///|
 /// Convert scan density to readable level.
-pub fn scan_density_name(density: Int) -> String {
+pub fn scan_density_name(density : Int) -> String {
   if density >= 20 {
     "dense"
   } else if density >= 10 {
@@ -150,10 +154,10 @@ pub fn scan_density_name(density: Int) -> String {
 ///|
 /// Estimate coverage quality score.
 pub fn coverage_quality_score(
-  coverage: Int,
-  overlap: Int,
-  missing: Int,
-  sensor_quality: Int
+  coverage : Int,
+  overlap : Int,
+  missing : Int,
+  sensor_quality : Int,
 ) -> Int {
   let c = clamp_percent(coverage)
   let o = clamp_percent(overlap)
@@ -171,12 +175,14 @@ pub fn coverage_quality_score(
   }
 
   let missing_score = 100 - m
-  clamp_percent(c * 4 / 10 + overlap_score * 2 / 10 + missing_score * 2 / 10 + s * 2 / 10)
+  clamp_percent(
+    c * 4 / 10 + overlap_score * 2 / 10 + missing_score * 2 / 10 + s * 2 / 10,
+  )
 }
 
 ///|
 /// Convert coverage quality score to readable level.
-pub fn coverage_quality_name(score: Int) -> String {
+pub fn coverage_quality_name(score : Int) -> String {
   let safe_score = clamp_percent(score)
   if safe_score >= 90 {
     "excellent"
@@ -192,18 +198,24 @@ pub fn coverage_quality_name(score: Int) -> String {
 ///|
 /// Check whether a field needs another coverage pass.
 pub fn needs_recoverage(
-  coverage: Int,
-  overlap: Int,
-  missing: Int,
-  sensor_quality: Int
+  coverage : Int,
+  overlap : Int,
+  missing : Int,
+  sensor_quality : Int,
 ) -> Bool {
-  let quality = coverage_quality_score(coverage, overlap, missing, sensor_quality)
+  let quality = coverage_quality_score(
+    coverage, overlap, missing, sensor_quality,
+  )
   quality < 75 || coverage < 85 || missing > 15 || !overlap_acceptable(overlap)
 }
 
 ///|
 /// Estimate extra flight strips needed for missing area.
-pub fn extra_strips_needed(missing_area_value: Int, strip_length: Int, scan_width: Int) -> Int {
+pub fn extra_strips_needed(
+  missing_area_value : Int,
+  strip_length : Int,
+  scan_width : Int,
+) -> Int {
   let strip_area = strip_length * scan_width
   if missing_area_value <= 0 || strip_area <= 0 {
     0
@@ -215,38 +227,32 @@ pub fn extra_strips_needed(missing_area_value: Int, strip_length: Int, scan_widt
 ///|
 /// Check whether coverage is valid for mapping.
 pub fn mapping_coverage_valid(
-  coverage: Int,
-  overlap: Int,
-  sensor_quality: Int
+  coverage : Int,
+  overlap : Int,
+  sensor_quality : Int,
 ) -> Bool {
   coverage >= 90 && overlap_acceptable(overlap) && sensor_usable(sensor_quality)
 }
 
 ///|
 /// Check whether coverage is valid for spraying.
-pub fn spraying_coverage_valid(
-  coverage: Int,
-  overlap: Int
-) -> Bool {
+pub fn spraying_coverage_valid(coverage : Int, overlap : Int) -> Bool {
   coverage >= 85 && overlap <= 40
 }
 
 ///|
 /// Check whether coverage is valid for inspection.
-pub fn inspection_coverage_valid(
-  coverage: Int,
-  sensor_quality: Int
-) -> Bool {
+pub fn inspection_coverage_valid(coverage : Int, sensor_quality : Int) -> Bool {
   coverage >= 80 && sensor_usable(sensor_quality)
 }
 
 ///|
 /// Check mission coverage validity.
 pub fn mission_coverage_valid(
-  mission_kind: Int,
-  coverage: Int,
-  overlap: Int,
-  sensor_quality: Int
+  mission_kind : Int,
+  coverage : Int,
+  overlap : Int,
+  sensor_quality : Int,
 ) -> Bool {
   if mission_kind == mission_type_mapping() {
     mapping_coverage_valid(coverage, overlap, sensor_quality)
@@ -271,7 +277,9 @@ pub fn coverage_summary() -> Unit {
 
   println("Coverage module:")
   println("- Coverage rule: covered area compared with total field area")
-  println("- Overlap rule: scan width and line spacing decide repeated coverage")
+  println(
+    "- Overlap rule: scan width and line spacing decide repeated coverage",
+  )
   println("- Quality rule: coverage, overlap, missing area, and sensor quality")
   println("- Example coverage:")
   println(coverage_level_name(coverage))

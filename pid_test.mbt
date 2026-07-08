@@ -1,3 +1,4 @@
+///|
 test "pid_basic" {
   let pid = PID::new(1.0, 0.1, 0.05)
   let pid = PID::set_setpoint(pid, 10.0)

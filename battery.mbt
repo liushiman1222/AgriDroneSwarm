@@ -36,7 +36,7 @@ pub fn battery_mode_return() -> Int {
 
 ///|
 /// Convert battery mode to readable text.
-pub fn battery_mode_name(mode: Int) -> String {
+pub fn battery_mode_name(mode : Int) -> String {
   match mode {
     0 => "idle"
     1 => "cruise"
@@ -79,7 +79,7 @@ pub fn battery_state_empty() -> Int {
 
 ///|
 /// Convert battery state to readable text.
-pub fn battery_state_name(state: Int) -> String {
+pub fn battery_state_name(state : Int) -> String {
   match state {
     0 => "full"
     1 => "normal"
@@ -92,7 +92,7 @@ pub fn battery_state_name(state: Int) -> String {
 
 ///|
 /// Clamp percent into 0..100.
-pub fn battery_clamp_percent(value: Int) -> Int {
+pub fn battery_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -104,7 +104,7 @@ pub fn battery_clamp_percent(value: Int) -> Int {
 
 ///|
 /// Clamp non-negative integer.
-pub fn battery_clamp_non_negative(value: Int) -> Int {
+pub fn battery_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -114,7 +114,7 @@ pub fn battery_clamp_non_negative(value: Int) -> Int {
 
 ///|
 /// Clamp positive integer.
-pub fn battery_clamp_positive(value: Int) -> Int {
+pub fn battery_clamp_positive(value : Int) -> Int {
   if value <= 0 {
     1
   } else {
@@ -124,7 +124,7 @@ pub fn battery_clamp_positive(value: Int) -> Int {
 
 ///|
 /// Convert battery percent to state.
-pub fn battery_state_from_percent(percent: Int) -> Int {
+pub fn battery_state_from_percent(percent : Int) -> Int {
   let p = battery_clamp_percent(percent)
   if p >= 90 {
     battery_state_full()
@@ -141,13 +141,13 @@ pub fn battery_state_from_percent(percent: Int) -> Int {
 
 ///|
 /// Convert battery percent to readable level.
-pub fn battery_percent_level_name(percent: Int) -> String {
+pub fn battery_percent_level_name(percent : Int) -> String {
   battery_state_name(battery_state_from_percent(percent))
 }
 
 ///|
 /// Estimate base drain percent per minute by mode.
-pub fn battery_mode_drain_per_minute(mode: Int) -> Int {
+pub fn battery_mode_drain_per_minute(mode : Int) -> Int {
   if mode == battery_mode_idle() {
     1
   } else if mode == battery_mode_cruise() {
@@ -165,7 +165,7 @@ pub fn battery_mode_drain_per_minute(mode: Int) -> Int {
 
 ///|
 /// Estimate payload drain penalty.
-pub fn battery_payload_drain_penalty(payload_kg: Int) -> Int {
+pub fn battery_payload_drain_penalty(payload_kg : Int) -> Int {
   let payload = battery_clamp_non_negative(payload_kg)
   if payload >= 30 {
     3
@@ -180,7 +180,7 @@ pub fn battery_payload_drain_penalty(payload_kg: Int) -> Int {
 
 ///|
 /// Estimate wind drain penalty.
-pub fn battery_wind_drain_penalty(wind_speed: Int) -> Int {
+pub fn battery_wind_drain_penalty(wind_speed : Int) -> Int {
   let wind = battery_clamp_non_negative(wind_speed)
   if wind >= 18 {
     4
@@ -195,7 +195,7 @@ pub fn battery_wind_drain_penalty(wind_speed: Int) -> Int {
 
 ///|
 /// Estimate temperature drain penalty.
-pub fn battery_temperature_drain_penalty(temperature_c: Int) -> Int {
+pub fn battery_temperature_drain_penalty(temperature_c : Int) -> Int {
   if temperature_c <= -5 {
     3
   } else if temperature_c <= 5 {
@@ -212,10 +212,10 @@ pub fn battery_temperature_drain_penalty(temperature_c: Int) -> Int {
 ///|
 /// Estimate total drain percent per minute.
 pub fn battery_drain_per_minute(
-  mode: Int,
-  payload_kg: Int,
-  wind_speed: Int,
-  temperature_c: Int
+  mode : Int,
+  payload_kg : Int,
+  wind_speed : Int,
+  temperature_c : Int,
 ) -> Int {
   battery_mode_drain_per_minute(mode) +
   battery_payload_drain_penalty(payload_kg) +
@@ -226,35 +226,42 @@ pub fn battery_drain_per_minute(
 ///|
 /// Estimate battery consumption percent for a mission segment.
 pub fn battery_consumption_percent(
-  minutes: Int,
-  mode: Int,
-  payload_kg: Int,
-  wind_speed: Int,
-  temperature_c: Int
+  minutes : Int,
+  mode : Int,
+  payload_kg : Int,
+  wind_speed : Int,
+  temperature_c : Int,
 ) -> Int {
   let safe_minutes = battery_clamp_non_negative(minutes)
-  let drain = battery_drain_per_minute(mode, payload_kg, wind_speed, temperature_c)
+  let drain = battery_drain_per_minute(
+    mode, payload_kg, wind_speed, temperature_c,
+  )
   battery_clamp_percent(safe_minutes * drain)
 }
 
 ///|
 /// Estimate remaining battery after a segment.
 pub fn battery_remaining_after_segment(
-  current_percent: Int,
-  minutes: Int,
-  mode: Int,
-  payload_kg: Int,
-  wind_speed: Int,
-  temperature_c: Int
+  current_percent : Int,
+  minutes : Int,
+  mode : Int,
+  payload_kg : Int,
+  wind_speed : Int,
+  temperature_c : Int,
 ) -> Int {
   let current = battery_clamp_percent(current_percent)
-  let used = battery_consumption_percent(minutes, mode, payload_kg, wind_speed, temperature_c)
+  let used = battery_consumption_percent(
+    minutes, mode, payload_kg, wind_speed, temperature_c,
+  )
   battery_clamp_percent(current - used)
 }
 
 ///|
 /// Estimate return-to-base battery requirement.
-pub fn battery_return_required_percent(distance_meters: Int, wind_speed: Int) -> Int {
+pub fn battery_return_required_percent(
+  distance_meters : Int,
+  wind_speed : Int,
+) -> Int {
   let distance = battery_clamp_non_negative(distance_meters)
   let wind = battery_clamp_non_negative(wind_speed)
   let distance_cost = (distance + 499) / 500
@@ -272,7 +279,7 @@ pub fn battery_return_required_percent(distance_meters: Int, wind_speed: Int) ->
 
 ///|
 /// Estimate reserve battery requirement.
-pub fn battery_reserve_required_percent(mission_risk: Int) -> Int {
+pub fn battery_reserve_required_percent(mission_risk : Int) -> Int {
   let risk = battery_clamp_percent(mission_risk)
   if risk >= 80 {
     30
@@ -288,9 +295,9 @@ pub fn battery_reserve_required_percent(mission_risk: Int) -> Int {
 ///|
 /// Estimate total safe battery requirement.
 pub fn battery_safe_required_percent(
-  mission_consumption: Int,
-  return_required: Int,
-  reserve_required: Int
+  mission_consumption : Int,
+  return_required : Int,
+  reserve_required : Int,
 ) -> Int {
   battery_clamp_percent(
     battery_clamp_percent(mission_consumption) +
@@ -302,16 +309,14 @@ pub fn battery_safe_required_percent(
 ///|
 /// Check whether current battery can start mission.
 pub fn battery_can_start_mission(
-  current_percent: Int,
-  mission_consumption: Int,
-  return_required: Int,
-  reserve_required: Int
+  current_percent : Int,
+  mission_consumption : Int,
+  return_required : Int,
+  reserve_required : Int,
 ) -> Bool {
   let current = battery_clamp_percent(current_percent)
   let required = battery_safe_required_percent(
-    mission_consumption,
-    return_required,
-    reserve_required,
+    mission_consumption, return_required, reserve_required,
   )
   current >= required
 }
@@ -319,31 +324,33 @@ pub fn battery_can_start_mission(
 ///|
 /// Check whether drone should return to base.
 pub fn battery_should_return_to_base(
-  current_percent: Int,
-  distance_meters: Int,
-  wind_speed: Int,
-  mission_risk: Int
+  current_percent : Int,
+  distance_meters : Int,
+  wind_speed : Int,
+  mission_risk : Int,
 ) -> Bool {
   let current = battery_clamp_percent(current_percent)
-  let return_required = battery_return_required_percent(distance_meters, wind_speed)
+  let return_required = battery_return_required_percent(
+    distance_meters, wind_speed,
+  )
   let reserve = battery_reserve_required_percent(mission_risk)
   current <= return_required + reserve
 }
 
 ///|
 /// Estimate emergency landing need.
-pub fn battery_emergency_landing_required(current_percent: Int) -> Bool {
+pub fn battery_emergency_landing_required(current_percent : Int) -> Bool {
   battery_clamp_percent(current_percent) <= 8
 }
 
 ///|
 /// Estimate available flight minutes.
 pub fn battery_available_minutes(
-  current_percent: Int,
-  mode: Int,
-  payload_kg: Int,
-  wind_speed: Int,
-  temperature_c: Int
+  current_percent : Int,
+  mode : Int,
+  payload_kg : Int,
+  wind_speed : Int,
+  temperature_c : Int,
 ) -> Int {
   let current = battery_clamp_percent(current_percent)
   let drain = battery_clamp_positive(
@@ -354,7 +361,7 @@ pub fn battery_available_minutes(
 
 ///|
 /// Estimate charge speed percent per minute.
-pub fn battery_charge_rate_per_minute(charger_watt: Int) -> Int {
+pub fn battery_charge_rate_per_minute(charger_watt : Int) -> Int {
   let watt = battery_clamp_non_negative(charger_watt)
   if watt >= 1000 {
     4
@@ -370,9 +377,9 @@ pub fn battery_charge_rate_per_minute(charger_watt: Int) -> Int {
 ///|
 /// Estimate charging minutes required.
 pub fn battery_charge_minutes(
-  current_percent: Int,
-  target_percent: Int,
-  charger_watt: Int
+  current_percent : Int,
+  target_percent : Int,
+  charger_watt : Int,
 ) -> Int {
   let current = battery_clamp_percent(current_percent)
   let target = battery_clamp_percent(target_percent)
@@ -387,7 +394,11 @@ pub fn battery_charge_minutes(
 
 ///|
 /// Estimate battery health score from cycle count and age.
-pub fn battery_health_score(cycle_count: Int, age_days: Int, deep_discharge_count: Int) -> Int {
+pub fn battery_health_score(
+  cycle_count : Int,
+  age_days : Int,
+  deep_discharge_count : Int,
+) -> Int {
   let cycles = battery_clamp_non_negative(cycle_count)
   let age = battery_clamp_non_negative(age_days)
   let deep = battery_clamp_non_negative(deep_discharge_count)
@@ -417,7 +428,7 @@ pub fn battery_health_score(cycle_count: Int, age_days: Int, deep_discharge_coun
 
 ///|
 /// Convert battery health score to readable text.
-pub fn battery_health_name(health: Int) -> String {
+pub fn battery_health_name(health : Int) -> String {
   let h = battery_clamp_percent(health)
   if h >= 85 {
     "excellent"
@@ -434,43 +445,38 @@ pub fn battery_health_name(health: Int) -> String {
 
 ///|
 /// Check whether battery is healthy enough for normal use.
-pub fn battery_healthy_for_use(health: Int) -> Bool {
+pub fn battery_healthy_for_use(health : Int) -> Bool {
   battery_clamp_percent(health) >= 50
 }
 
 ///|
 /// Check whether battery should be replaced.
-pub fn battery_replace_recommended(health: Int, cycle_count: Int) -> Bool {
-  battery_clamp_percent(health) < 30 || battery_clamp_non_negative(cycle_count) >= 1000
+pub fn battery_replace_recommended(health : Int, cycle_count : Int) -> Bool {
+  battery_clamp_percent(health) < 30 ||
+  battery_clamp_non_negative(cycle_count) >= 1000
 }
 
 ///|
 /// Estimate battery risk score.
 pub fn battery_risk_score(
-  current_percent: Int,
-  health_score: Int,
-  mission_consumption: Int,
-  return_required: Int,
-  reserve_required: Int
+  current_percent : Int,
+  health_score : Int,
+  mission_consumption : Int,
+  return_required : Int,
+  reserve_required : Int,
 ) -> Int {
   let current = battery_clamp_percent(current_percent)
   let health = battery_clamp_percent(health_score)
   let required = battery_safe_required_percent(
-    mission_consumption,
-    return_required,
-    reserve_required,
+    mission_consumption, return_required, reserve_required,
   )
-  let shortage = if required > current {
-    required - current
-  } else {
-    0
-  }
+  let shortage = if required > current { required - current } else { 0 }
   battery_clamp_percent(shortage * 2 + (100 - health) / 2)
 }
 
 ///|
 /// Convert battery risk score to readable text.
-pub fn battery_risk_name(risk: Int) -> String {
+pub fn battery_risk_name(risk : Int) -> String {
   let r = battery_clamp_percent(risk)
   if r >= 80 {
     "critical"
@@ -486,17 +492,14 @@ pub fn battery_risk_name(risk: Int) -> String {
 ///|
 /// Estimate mission battery status text.
 pub fn battery_mission_status(
-  current_percent: Int,
-  mission_consumption: Int,
-  return_required: Int,
-  reserve_required: Int
+  current_percent : Int,
+  mission_consumption : Int,
+  return_required : Int,
+  reserve_required : Int,
 ) -> String {
   if battery_can_start_mission(
-    current_percent,
-    mission_consumption,
-    return_required,
-    reserve_required,
-  ) {
+      current_percent, mission_consumption, return_required, reserve_required,
+    ) {
     "battery-ready"
   } else {
     "battery-insufficient"
@@ -517,26 +520,23 @@ pub fn battery_summary() -> Unit {
 
   let drain = battery_drain_per_minute(mode, payload, wind, temperature)
   let consumption = battery_consumption_percent(
-    mission_minutes,
-    mode,
-    payload,
-    wind,
-    temperature,
+    mission_minutes, mode, payload, wind, temperature,
   )
   let remaining = battery_remaining_after_segment(
-    current,
-    mission_minutes,
-    mode,
-    payload,
-    wind,
-    temperature,
+    current, mission_minutes, mode, payload, wind, temperature,
   )
   let return_required = battery_return_required_percent(distance, wind)
   let reserve = battery_reserve_required_percent(mission_risk)
-  let required = battery_safe_required_percent(consumption, return_required, reserve)
-  let can_start = battery_can_start_mission(current, consumption, return_required, reserve)
+  let required = battery_safe_required_percent(
+    consumption, return_required, reserve,
+  )
+  let can_start = battery_can_start_mission(
+    current, consumption, return_required, reserve,
+  )
   let health = battery_health_score(420, 380, 2)
-  let risk = battery_risk_score(current, health, consumption, return_required, reserve)
+  let risk = battery_risk_score(
+    current, health, consumption, return_required, reserve,
+  )
 
   println("Battery module:")
   println("- Mode:")
@@ -554,7 +554,9 @@ pub fn battery_summary() -> Unit {
   println("- Can start mission:")
   println(can_start)
   println("- Should return to base:")
-  println(battery_should_return_to_base(remaining, distance, wind, mission_risk))
+  println(
+    battery_should_return_to_base(remaining, distance, wind, mission_risk),
+  )
   println("- Battery health:")
   println(battery_health_name(health))
   println("- Battery risk:")

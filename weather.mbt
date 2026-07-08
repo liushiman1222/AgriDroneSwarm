@@ -42,7 +42,7 @@ pub fn weather_storm() -> Int {
 
 ///|
 /// Convert weather code to readable text.
-pub fn weather_name(kind: Int) -> String {
+pub fn weather_name(kind : Int) -> String {
   match kind {
     0 => "clear"
     1 => "cloudy"
@@ -56,7 +56,7 @@ pub fn weather_name(kind: Int) -> String {
 
 ///|
 /// Clamp wind speed into non-negative range.
-pub fn clamp_wind_speed(speed: Int) -> Int {
+pub fn clamp_wind_speed(speed : Int) -> Int {
   if speed < 0 {
     0
   } else {
@@ -66,7 +66,7 @@ pub fn clamp_wind_speed(speed: Int) -> Int {
 
 ///|
 /// Clamp rainfall into non-negative range.
-pub fn clamp_rainfall(rainfall: Int) -> Int {
+pub fn clamp_rainfall(rainfall : Int) -> Int {
   if rainfall < 0 {
     0
   } else {
@@ -76,7 +76,7 @@ pub fn clamp_rainfall(rainfall: Int) -> Int {
 
 ///|
 /// Clamp visibility into non-negative range.
-pub fn clamp_visibility(visibility: Int) -> Int {
+pub fn clamp_visibility(visibility : Int) -> Int {
   if visibility < 0 {
     0
   } else {
@@ -86,7 +86,7 @@ pub fn clamp_visibility(visibility: Int) -> Int {
 
 ///|
 /// Classify wind speed.
-pub fn wind_level_name(speed: Int) -> String {
+pub fn wind_level_name(speed : Int) -> String {
   let safe_speed = clamp_wind_speed(speed)
   if safe_speed >= 16 {
     "dangerous"
@@ -101,7 +101,7 @@ pub fn wind_level_name(speed: Int) -> String {
 
 ///|
 /// Classify rainfall.
-pub fn rainfall_level_name(rainfall: Int) -> String {
+pub fn rainfall_level_name(rainfall : Int) -> String {
   let safe_rain = clamp_rainfall(rainfall)
   if safe_rain >= 30 {
     "heavy"
@@ -116,7 +116,7 @@ pub fn rainfall_level_name(rainfall: Int) -> String {
 
 ///|
 /// Classify visibility.
-pub fn visibility_level_name(visibility: Int) -> String {
+pub fn visibility_level_name(visibility : Int) -> String {
   let safe_visibility = clamp_visibility(visibility)
   if safe_visibility >= 1000 {
     "good"
@@ -131,35 +131,35 @@ pub fn visibility_level_name(visibility: Int) -> String {
 
 ///|
 /// Check whether wind speed is safe for flight.
-pub fn wind_safe_for_flight(speed: Int) -> Bool {
+pub fn wind_safe_for_flight(speed : Int) -> Bool {
   clamp_wind_speed(speed) < 16
 }
 
 ///|
 /// Check whether rainfall is safe for flight.
-pub fn rainfall_safe_for_flight(rainfall: Int) -> Bool {
+pub fn rainfall_safe_for_flight(rainfall : Int) -> Bool {
   clamp_rainfall(rainfall) < 20
 }
 
 ///|
 /// Check whether visibility is safe for flight.
-pub fn visibility_safe_for_flight(visibility: Int) -> Bool {
+pub fn visibility_safe_for_flight(visibility : Int) -> Bool {
   clamp_visibility(visibility) >= 300
 }
 
 ///|
 /// Check whether weather kind is safe.
-pub fn weather_kind_safe_for_flight(kind: Int) -> Bool {
+pub fn weather_kind_safe_for_flight(kind : Int) -> Bool {
   kind != weather_storm()
 }
 
 ///|
 /// Full flight safety check.
 pub fn weather_safe_for_flight(
-  kind: Int,
-  wind_speed: Int,
-  rainfall: Int,
-  visibility: Int
+  kind : Int,
+  wind_speed : Int,
+  rainfall : Int,
+  visibility : Int,
 ) -> Bool {
   weather_kind_safe_for_flight(kind) &&
   wind_safe_for_flight(wind_speed) &&
@@ -170,12 +170,14 @@ pub fn weather_safe_for_flight(
 ///|
 /// Check whether spraying is suitable.
 pub fn weather_suitable_for_spraying(
-  kind: Int,
-  wind_speed: Int,
-  rainfall: Int,
-  visibility: Int
+  kind : Int,
+  wind_speed : Int,
+  rainfall : Int,
+  visibility : Int,
 ) -> Bool {
-  let flight_ok = weather_safe_for_flight(kind, wind_speed, rainfall, visibility)
+  let flight_ok = weather_safe_for_flight(
+    kind, wind_speed, rainfall, visibility,
+  )
   let wind_ok = clamp_wind_speed(wind_speed) <= 6
   let rain_ok = clamp_rainfall(rainfall) == 0
   flight_ok && wind_ok && rain_ok
@@ -184,10 +186,10 @@ pub fn weather_suitable_for_spraying(
 ///|
 /// Estimate weather risk score.
 pub fn weather_risk_score(
-  kind: Int,
-  wind_speed: Int,
-  rainfall: Int,
-  visibility: Int
+  kind : Int,
+  wind_speed : Int,
+  rainfall : Int,
+  visibility : Int,
 ) -> Int {
   let wind_risk = clamp_wind_speed(wind_speed) * 3
   let rain_risk = clamp_rainfall(rainfall) * 2
@@ -214,7 +216,7 @@ pub fn weather_risk_score(
 
 ///|
 /// Convert weather risk score to readable level.
-pub fn weather_risk_level_name(score: Int) -> String {
+pub fn weather_risk_level_name(score : Int) -> String {
   if score >= 100 {
     "critical"
   } else if score >= 60 {
@@ -228,24 +230,24 @@ pub fn weather_risk_level_name(score: Int) -> String {
 
 ///|
 /// Check whether weather requires mission delay.
-pub fn weather_requires_delay(risk_score: Int) -> Bool {
+pub fn weather_requires_delay(risk_score : Int) -> Bool {
   risk_score >= 60
 }
 
 ///|
 /// Check whether weather requires emergency return.
 pub fn weather_requires_return(
-  kind: Int,
-  wind_speed: Int,
-  rainfall: Int,
-  visibility: Int
+  kind : Int,
+  wind_speed : Int,
+  rainfall : Int,
+  visibility : Int,
 ) -> Bool {
   !weather_safe_for_flight(kind, wind_speed, rainfall, visibility)
 }
 
 ///|
 /// Estimate extra battery cost caused by wind.
-pub fn wind_battery_penalty(distance: Int, wind_speed: Int) -> Int {
+pub fn wind_battery_penalty(distance : Int, wind_speed : Int) -> Int {
   let safe_distance = if distance < 0 { 0 } else { distance }
   let safe_wind = clamp_wind_speed(wind_speed)
   safe_distance * safe_wind / 10
@@ -253,21 +255,23 @@ pub fn wind_battery_penalty(distance: Int, wind_speed: Int) -> Int {
 
 ///|
 /// Estimate weather-adjusted flight battery cost.
-pub fn weather_adjusted_flight_cost(distance: Int, wind_speed: Int) -> Int {
+pub fn weather_adjusted_flight_cost(distance : Int, wind_speed : Int) -> Int {
   estimate_flight_cost(distance) + wind_battery_penalty(distance, wind_speed)
 }
 
 ///|
 /// Check whether a mission is weather compatible.
 pub fn mission_weather_compatible(
-  mission_kind: Int,
-  weather_kind: Int,
-  wind_speed: Int,
-  rainfall: Int,
-  visibility: Int
+  mission_kind : Int,
+  weather_kind : Int,
+  wind_speed : Int,
+  rainfall : Int,
+  visibility : Int,
 ) -> Bool {
   if mission_kind == mission_type_spraying() {
-    weather_suitable_for_spraying(weather_kind, wind_speed, rainfall, visibility)
+    weather_suitable_for_spraying(
+      weather_kind, wind_speed, rainfall, visibility,
+    )
   } else {
     weather_safe_for_flight(weather_kind, wind_speed, rainfall, visibility)
   }

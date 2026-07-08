@@ -1,11 +1,15 @@
+///|
 pub struct Matrix3 {
-  data: Array[Array[Double]]
-}
-pub fn Matrix3::new(data: Array[Array[Double]]) -> Matrix3 {
-  { data: data }
+  data : Array[Array[Double]]
 }
 
-fn new_matrix3(rows: Array[Array[Double]]) -> Matrix3 {
+///|
+pub fn Matrix3::new(data : Array[Array[Double]]) -> Matrix3 {
+  { data, }
+}
+
+///|
+fn new_matrix3(rows : Array[Array[Double]]) -> Matrix3 {
   if rows.length() != 3 {
     abort("Matrix3 must be 3x3")
   }
@@ -21,23 +25,18 @@ fn new_matrix3(rows: Array[Array[Double]]) -> Matrix3 {
   { data: rows }
 }
 
+///|
 pub fn Matrix3::zero() -> Matrix3 {
-  new_matrix3([
-    [0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0],
-    [0.0, 0.0, 0.0],
-  ])
+  new_matrix3([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]])
 }
 
+///|
 pub fn Matrix3::identity() -> Matrix3 {
-  new_matrix3([
-    [1.0, 0.0, 0.0],
-    [0.0, 1.0, 0.0],
-    [0.0, 0.0, 1.0],
-  ])
+  new_matrix3([[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]])
 }
 
-pub fn Matrix3::add(self: Matrix3, other: Matrix3) -> Matrix3 {
+///|
+pub fn Matrix3::add(self : Matrix3, other : Matrix3) -> Matrix3 {
   new_matrix3([
     [
       self.data[0][0] + other.data[0][0],
@@ -57,7 +56,8 @@ pub fn Matrix3::add(self: Matrix3, other: Matrix3) -> Matrix3 {
   ])
 }
 
-pub fn Matrix3::sub(self: Matrix3, other: Matrix3) -> Matrix3 {
+///|
+pub fn Matrix3::sub(self : Matrix3, other : Matrix3) -> Matrix3 {
   new_matrix3([
     [
       self.data[0][0] - other.data[0][0],
@@ -77,7 +77,8 @@ pub fn Matrix3::sub(self: Matrix3, other: Matrix3) -> Matrix3 {
   ])
 }
 
-pub fn Matrix3::scalar_mul(self: Matrix3, scalar: Double) -> Matrix3 {
+///|
+pub fn Matrix3::scalar_mul(self : Matrix3, scalar : Double) -> Matrix3 {
   new_matrix3([
     [
       self.data[0][0] * scalar,
@@ -97,7 +98,8 @@ pub fn Matrix3::scalar_mul(self: Matrix3, scalar: Double) -> Matrix3 {
   ])
 }
 
-pub fn Matrix3::mul(self: Matrix3, other: Matrix3) -> Matrix3 {
+///|
+pub fn Matrix3::mul(self : Matrix3, other : Matrix3) -> Matrix3 {
   let a00 = self.data[0][0]
   let a01 = self.data[0][1]
   let a02 = self.data[0][2]
@@ -137,7 +139,8 @@ pub fn Matrix3::mul(self: Matrix3, other: Matrix3) -> Matrix3 {
   ])
 }
 
-pub fn Matrix3::transpose(self: Matrix3) -> Matrix3 {
+///|
+pub fn Matrix3::transpose(self : Matrix3) -> Matrix3 {
   new_matrix3([
     [self.data[0][0], self.data[1][0], self.data[2][0]],
     [self.data[0][1], self.data[1][1], self.data[2][1]],
@@ -145,7 +148,8 @@ pub fn Matrix3::transpose(self: Matrix3) -> Matrix3 {
   ])
 }
 
-pub fn Matrix3::det(self: Matrix3) -> Double {
+///|
+pub fn Matrix3::det(self : Matrix3) -> Double {
   let a = self.data[0][0]
   let b = self.data[0][1]
   let c = self.data[0][2]
@@ -159,7 +163,8 @@ pub fn Matrix3::det(self: Matrix3) -> Double {
   a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g)
 }
 
-pub fn Matrix3::adjugate(self: Matrix3) -> Matrix3 {
+///|
+pub fn Matrix3::adjugate(self : Matrix3) -> Matrix3 {
   let a = self.data[0][0]
   let b = self.data[0][1]
   let c = self.data[0][2]
@@ -177,7 +182,8 @@ pub fn Matrix3::adjugate(self: Matrix3) -> Matrix3 {
   ]).transpose()
 }
 
-pub fn Matrix3::inverse(self: Matrix3) -> Option[Matrix3] {
+///|
+pub fn Matrix3::inverse(self : Matrix3) -> Matrix3? {
   let det = self.det()
   if det == 0.0 {
     None

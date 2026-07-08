@@ -2,7 +2,7 @@
 /// Swarm coordination module for AgriDroneSwarm.
 
 ///|
-pub fn swarm_clamp_non_negative(value: Int) -> Int {
+pub fn swarm_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -11,7 +11,7 @@ pub fn swarm_clamp_non_negative(value: Int) -> Int {
 }
 
 ///|
-pub fn swarm_clamp_percent(value: Int) -> Int {
+pub fn swarm_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -22,7 +22,10 @@ pub fn swarm_clamp_percent(value: Int) -> Int {
 }
 
 ///|
-pub fn swarm_active_ratio_percent(active_drones: Int, total_drones: Int) -> Int {
+pub fn swarm_active_ratio_percent(
+  active_drones : Int,
+  total_drones : Int,
+) -> Int {
   let active = swarm_clamp_non_negative(active_drones)
   let total = swarm_clamp_non_negative(total_drones)
 
@@ -34,7 +37,10 @@ pub fn swarm_active_ratio_percent(active_drones: Int, total_drones: Int) -> Int 
 }
 
 ///|
-pub fn swarm_average_load_percent(total_load_percent: Int, drone_count: Int) -> Int {
+pub fn swarm_average_load_percent(
+  total_load_percent : Int,
+  drone_count : Int,
+) -> Int {
   let load = swarm_clamp_non_negative(total_load_percent)
   let count = swarm_clamp_non_negative(drone_count)
 
@@ -47,11 +53,13 @@ pub fn swarm_average_load_percent(total_load_percent: Int, drone_count: Int) -> 
 
 ///|
 pub fn swarm_communication_quality_score(
-  connected_drones: Int,
-  total_drones: Int,
-  packet_loss_percent: Int
+  connected_drones : Int,
+  total_drones : Int,
+  packet_loss_percent : Int,
 ) -> Int {
-  let connected_ratio = swarm_active_ratio_percent(connected_drones, total_drones)
+  let connected_ratio = swarm_active_ratio_percent(
+    connected_drones, total_drones,
+  )
   let packet_loss = swarm_clamp_percent(packet_loss_percent)
 
   swarm_clamp_percent(connected_ratio - packet_loss)
@@ -59,9 +67,9 @@ pub fn swarm_communication_quality_score(
 
 ///|
 pub fn swarm_coordination_score(
-  active_ratio_percent: Int,
-  communication_quality_score: Int,
-  average_load_percent: Int
+  active_ratio_percent : Int,
+  communication_quality_score : Int,
+  average_load_percent : Int,
 ) -> Int {
   let active = swarm_clamp_percent(active_ratio_percent)
   let communication = swarm_clamp_percent(communication_quality_score)
@@ -73,16 +81,17 @@ pub fn swarm_coordination_score(
 
 ///|
 pub fn swarm_mission_capacity_hectares(
-  active_drones: Int,
-  hectares_per_drone: Int
+  active_drones : Int,
+  hectares_per_drone : Int,
 ) -> Int {
-  swarm_clamp_non_negative(active_drones) * swarm_clamp_non_negative(hectares_per_drone)
+  swarm_clamp_non_negative(active_drones) *
+  swarm_clamp_non_negative(hectares_per_drone)
 }
 
 ///|
 pub fn swarm_required_drones(
-  mission_hectares: Int,
-  hectares_per_drone: Int
+  mission_hectares : Int,
+  hectares_per_drone : Int,
 ) -> Int {
   let mission = swarm_clamp_non_negative(mission_hectares)
   let capacity = swarm_clamp_non_negative(hectares_per_drone)
@@ -96,16 +105,17 @@ pub fn swarm_required_drones(
 
 ///|
 pub fn swarm_has_enough_drones(
-  active_drones: Int,
-  required_drones: Int
+  active_drones : Int,
+  required_drones : Int,
 ) -> Bool {
-  swarm_clamp_non_negative(active_drones) >= swarm_clamp_non_negative(required_drones)
+  swarm_clamp_non_negative(active_drones) >=
+  swarm_clamp_non_negative(required_drones)
 }
 
 ///|
 pub fn swarm_status(
-  coordination_score: Int,
-  has_enough_drones: Bool
+  coordination_score : Int,
+  has_enough_drones : Bool,
 ) -> String {
   let score = swarm_clamp_percent(coordination_score)
 
@@ -124,9 +134,9 @@ pub fn swarm_status(
 
 ///|
 pub fn swarm_should_rebalance(
-  average_load_percent: Int,
-  communication_quality_score: Int,
-  inactive_drones: Int
+  average_load_percent : Int,
+  communication_quality_score : Int,
+  inactive_drones : Int,
 ) -> Bool {
   let load = swarm_clamp_percent(average_load_percent)
   let communication = swarm_clamp_percent(communication_quality_score)
@@ -149,23 +159,19 @@ pub fn swarm_summary() -> Unit {
   let active_ratio = swarm_active_ratio_percent(active_drones, total_drones)
   let average_load = swarm_average_load_percent(total_load, active_drones)
   let communication = swarm_communication_quality_score(
-    connected_drones,
-    total_drones,
-    packet_loss
+    connected_drones, total_drones, packet_loss,
   )
   let coordination = swarm_coordination_score(
-    active_ratio,
-    communication,
-    average_load
+    active_ratio, communication, average_load,
   )
-  let capacity = swarm_mission_capacity_hectares(active_drones, hectares_per_drone)
+  let capacity = swarm_mission_capacity_hectares(
+    active_drones, hectares_per_drone,
+  )
   let required = swarm_required_drones(mission_hectares, hectares_per_drone)
   let enough = swarm_has_enough_drones(active_drones, required)
   let status = swarm_status(coordination, enough)
   let rebalance = swarm_should_rebalance(
-    average_load,
-    communication,
-    inactive_drones
+    average_load, communication, inactive_drones,
   )
 
   println("Swarm Summary")
@@ -179,6 +185,7 @@ pub fn swarm_summary() -> Unit {
   println("status: \{status}")
   println("should rebalance: \{rebalance}")
 }
+
 ///|
 /// A drone in the swarm.
 pub struct Drone {
@@ -192,13 +199,9 @@ pub struct Drone {
 pub fn Drone::new(
   position : Vector2D,
   velocity : Vector2D,
-  max_speed : Double
+  max_speed : Double,
 ) -> Drone {
-  Drone::{
-    position: position,
-    velocity: velocity,
-    max_speed: max_speed,
-  }
+  Drone::{ position, velocity, max_speed }
 }
 
 ///|
@@ -229,6 +232,7 @@ pub fn Drone::step(self : Drone) -> Drone {
     max_speed: drone.max_speed,
   }
 }
+
 ///|
 /// A swarm containing multiple drones.
 pub struct Swarm {
@@ -238,41 +242,38 @@ pub struct Swarm {
 ///|
 /// Create a new swarm from drones.
 pub fn Swarm::new(drones : Array[Drone]) -> Swarm {
-  Swarm::{
-    drones: drones,
-  }
+  Swarm::{ drones, }
 }
+
 ///|
 /// Move every drone in the swarm one step.
 pub fn Swarm::step(self : Swarm) -> Swarm {
-  let stepped_drones = self.drones.map(fn(drone) {
-    drone.step()
-  })
+  let stepped_drones = self.drones.map(fn(drone) { drone.step() })
 
-  Swarm::{
-    drones: stepped_drones,
-  }
+  Swarm::{ drones: stepped_drones }
 }
+
 ///|
 /// Get number of drones in the swarm.
 pub fn Swarm::size(self : Swarm) -> Int {
   self.drones.length()
 }
+
 ///|
 /// Check whether the swarm has no drones.
 pub fn Swarm::is_empty(self : Swarm) -> Bool {
   self.drones.length() == 0
 }
+
 ///|
 /// Add a drone to the swarm.
 pub fn Swarm::add_drone(self : Swarm, drone : Drone) -> Swarm {
   let drones = self.drones
   drones.push(drone)
 
-  Swarm::{
-    drones: drones,
-  }
+  Swarm::{ drones, }
 }
+
 ///|
 /// Calculate average speed of all drones in the swarm.
 pub fn Swarm::average_speed(self : Swarm) -> Double {
@@ -290,6 +291,7 @@ pub fn Swarm::average_speed(self : Swarm) -> Double {
     total / count
   }
 }
+
 ///|
 /// Calculate center position of all drones in the swarm.
 pub fn Swarm::center(self : Swarm) -> Vector2D {
@@ -307,6 +309,7 @@ pub fn Swarm::center(self : Swarm) -> Vector2D {
     total.scale(1.0 / count)
   }
 }
+
 ///|
 /// Calculate average velocity vector of all drones in the swarm.
 pub fn Swarm::average_velocity(self : Swarm) -> Vector2D {
@@ -366,6 +369,7 @@ pub fn Swarm::average_distance_from_center(self : Swarm) -> Double {
     total_distance / count
   }
 }
+
 ///|
 /// Check whether the swarm is too spread out.
 pub fn Swarm::is_too_spread(self : Swarm, max_radius : Double) -> Bool {
@@ -413,12 +417,13 @@ pub fn Swarm::alignment_score(self : Swarm) -> Double {
 pub fn Swarm::is_aligned(self : Swarm, min_score : Double) -> Bool {
   self.alignment_score() >= min_score
 }
+
 ///|
 /// Count drones within a radius from the target position.
 pub fn Swarm::count_within_radius(
   self : Swarm,
   target : Vector2D,
-  radius : Double
+  radius : Double,
 ) -> Int {
   let mut count = 0
 
@@ -439,7 +444,7 @@ pub fn Swarm::count_within_radius(
 pub fn Swarm::any_within_radius(
   self : Swarm,
   target : Vector2D,
-  radius : Double
+  radius : Double,
 ) -> Bool {
   self.count_within_radius(target, radius) > 0
 }
@@ -451,7 +456,7 @@ pub fn Swarm::any_within_radius(
 pub fn Swarm::all_within_radius(
   self : Swarm,
   target : Vector2D,
-  radius : Double
+  radius : Double,
 ) -> Bool {
   if self.drones.length() == 0 {
     false
@@ -464,10 +469,7 @@ pub fn Swarm::all_within_radius(
 /// Calculate the nearest distance from any drone to the target position.
 ///
 /// Empty swarm returns 0.0.
-pub fn Swarm::nearest_distance_to(
-  self : Swarm,
-  target : Vector2D
-) -> Double {
+pub fn Swarm::nearest_distance_to(self : Swarm, target : Vector2D) -> Double {
   if self.drones.length() == 0 {
     0.0
   } else {
@@ -494,10 +496,7 @@ pub fn Swarm::nearest_distance_to(
 /// Calculate the farthest distance from any drone to the target position.
 ///
 /// Empty swarm returns 0.0.
-pub fn Swarm::farthest_distance_to(
-  self : Swarm,
-  target : Vector2D
-) -> Double {
+pub fn Swarm::farthest_distance_to(self : Swarm, target : Vector2D) -> Double {
   if self.drones.length() == 0 {
     0.0
   } else {
@@ -515,6 +514,7 @@ pub fn Swarm::farthest_distance_to(
     farthest
   }
 }
+
 ///|
 /// Calculate the ratio of drones within a radius from the target position.
 ///
@@ -522,7 +522,7 @@ pub fn Swarm::farthest_distance_to(
 pub fn Swarm::arrival_ratio(
   self : Swarm,
   target : Vector2D,
-  radius : Double
+  radius : Double,
 ) -> Double {
   if self.drones.length() == 0 {
     0.0
@@ -552,7 +552,7 @@ pub fn Swarm::arrival_ratio(
 pub fn Swarm::mission_progress(
   self : Swarm,
   target : Vector2D,
-  radius : Double
+  radius : Double,
 ) -> Double {
   self.arrival_ratio(target, radius)
 }
@@ -564,7 +564,7 @@ pub fn Swarm::mission_progress(
 pub fn Swarm::is_mission_complete(
   self : Swarm,
   target : Vector2D,
-  radius : Double
+  radius : Double,
 ) -> Bool {
   self.all_within_radius(target, radius)
 }
@@ -573,10 +573,7 @@ pub fn Swarm::is_mission_complete(
 /// Calculate coverage radius around the target position.
 ///
 /// This is the farthest distance from any drone to the target.
-pub fn Swarm::coverage_radius(
-  self : Swarm,
-  target : Vector2D
-) -> Double {
+pub fn Swarm::coverage_radius(self : Swarm, target : Vector2D) -> Double {
   self.farthest_distance_to(target)
 }
 
@@ -607,7 +604,7 @@ pub fn Swarm::task_readiness_score(self : Swarm) -> Double {
 pub fn Swarm::needs_regroup(
   self : Swarm,
   max_radius : Double,
-  min_alignment : Double
+  min_alignment : Double,
 ) -> Bool {
   if self.is_too_spread(max_radius) {
     true
@@ -623,7 +620,7 @@ pub fn Swarm::needs_regroup(
 pub fn Swarm::is_ready_for_task(
   self : Swarm,
   max_radius : Double,
-  min_alignment : Double
+  min_alignment : Double,
 ) -> Bool {
   if self.drones.length() == 0 {
     false

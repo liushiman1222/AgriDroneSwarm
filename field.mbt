@@ -1,13 +1,16 @@
+///|
 pub struct FieldPoint {
   x : Int
   y : Int
 }
 
+///|
 pub struct FieldSize {
   width : Int
   height : Int
 }
 
+///|
 pub struct FieldZone {
   id : Int
   name : String
@@ -17,18 +20,21 @@ pub struct FieldZone {
   max_y : Int
 }
 
+///|
 pub struct FieldObstacle {
   id : Int
   pos : FieldPoint
   radius : Int
 }
 
+///|
 pub struct FieldBase {
   id : Int
   pos : FieldPoint
   name : String
 }
 
+///|
 pub struct FarmField {
   size : FieldSize
   crop_zones : Array[FieldZone]
@@ -36,41 +42,44 @@ pub struct FarmField {
   bases : Array[FieldBase]
 }
 
+///|
 pub fn make_field_point(x : Int, y : Int) -> FieldPoint {
   { x, y }
 }
 
+///|
 pub fn make_field_size(width : Int, height : Int) -> FieldSize {
   { width, height }
 }
 
+///|
 pub fn make_field_zone(
   id : Int,
   name : String,
   min_x : Int,
   min_y : Int,
   max_x : Int,
-  max_y : Int
+  max_y : Int,
 ) -> FieldZone {
   { id, name, min_x, min_y, max_x, max_y }
 }
 
-pub fn make_field_obstacle(id : Int, x : Int, y : Int, radius : Int) -> FieldObstacle {
-  {
-    id,
-    pos: make_field_point(x, y),
-    radius,
-  }
+///|
+pub fn make_field_obstacle(
+  id : Int,
+  x : Int,
+  y : Int,
+  radius : Int,
+) -> FieldObstacle {
+  { id, pos: make_field_point(x, y), radius }
 }
 
+///|
 pub fn make_field_base(id : Int, x : Int, y : Int, name : String) -> FieldBase {
-  {
-    id,
-    pos: make_field_point(x, y),
-    name,
-  }
+  { id, pos: make_field_point(x, y), name }
 }
 
+///|
 pub fn make_demo_field() -> FarmField {
   {
     size: make_field_size(120, 80),
@@ -91,10 +100,12 @@ pub fn make_demo_field() -> FarmField {
   }
 }
 
+///|
 pub fn field_area(field : FarmField) -> Int {
   field.size.width * field.size.height
 }
 
+///|
 pub fn zone_area(zone : FieldZone) -> Int {
   let w = zone.max_x - zone.min_x
   let h = zone.max_y - zone.min_y
@@ -105,6 +116,7 @@ pub fn zone_area(zone : FieldZone) -> Int {
   }
 }
 
+///|
 pub fn total_crop_area(field : FarmField) -> Int {
   let mut total = 0
   for zone in field.crop_zones {
@@ -113,10 +125,12 @@ pub fn total_crop_area(field : FarmField) -> Int {
   total
 }
 
+///|
 pub fn in_bounds(field : FarmField, p : FieldPoint) -> Bool {
   p.x >= 0 && p.y >= 0 && p.x < field.size.width && p.y < field.size.height
 }
 
+///|
 pub fn point_in_zone(p : FieldPoint, zone : FieldZone) -> Bool {
   p.x >= zone.min_x &&
   p.x <= zone.max_x &&
@@ -124,16 +138,19 @@ pub fn point_in_zone(p : FieldPoint, zone : FieldZone) -> Bool {
   p.y <= zone.max_y
 }
 
+///|
 pub fn distance2(a : FieldPoint, b : FieldPoint) -> Int {
   let dx = a.x - b.x
   let dy = a.y - b.y
   dx * dx + dy * dy
 }
 
+///|
 pub fn blocked_by_obstacle(p : FieldPoint, obs : FieldObstacle) -> Bool {
   distance2(p, obs.pos) <= obs.radius * obs.radius
 }
 
+///|
 pub fn is_blocked(field : FarmField, p : FieldPoint) -> Bool {
   if !in_bounds(field, p) {
     true
@@ -148,6 +165,7 @@ pub fn is_blocked(field : FarmField, p : FieldPoint) -> Bool {
   }
 }
 
+///|
 pub fn nearest_base_index(field : FarmField, p : FieldPoint) -> Int {
   let mut best = 0
   let mut best_dist = 2147483647
@@ -163,6 +181,7 @@ pub fn nearest_base_index(field : FarmField, p : FieldPoint) -> Int {
   best
 }
 
+///|
 pub fn count_zones_covering(field : FarmField, p : FieldPoint) -> Int {
   let mut count = 0
   for zone in field.crop_zones {
@@ -173,6 +192,7 @@ pub fn count_zones_covering(field : FarmField, p : FieldPoint) -> Int {
   count
 }
 
+///|
 pub fn field_summary() -> Unit {
   let field = make_demo_field()
   println("Field module:")

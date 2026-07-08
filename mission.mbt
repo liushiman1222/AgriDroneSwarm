@@ -36,7 +36,7 @@ pub fn mission_type_charging() -> Int {
 
 ///|
 /// Convert mission type to readable text.
-pub fn mission_type_name(kind: Int) -> String {
+pub fn mission_type_name(kind : Int) -> String {
   match kind {
     0 => "inspection"
     1 => "spraying"
@@ -73,7 +73,7 @@ pub fn mission_priority_critical() -> Int {
 
 ///|
 /// Convert priority to readable text.
-pub fn mission_priority_name(priority: Int) -> String {
+pub fn mission_priority_name(priority : Int) -> String {
   match priority {
     1 => "low"
     2 => "normal"
@@ -85,7 +85,7 @@ pub fn mission_priority_name(priority: Int) -> String {
 
 ///|
 /// Clamp mission priority into 1..4.
-pub fn clamp_mission_priority(priority: Int) -> Int {
+pub fn clamp_mission_priority(priority : Int) -> Int {
   if priority < 1 {
     1
   } else if priority > 4 {
@@ -97,7 +97,7 @@ pub fn clamp_mission_priority(priority: Int) -> Int {
 
 ///|
 /// Estimate mission workload from area and difficulty.
-pub fn estimate_mission_workload(area: Int, difficulty: Int) -> Int {
+pub fn estimate_mission_workload(area : Int, difficulty : Int) -> Int {
   let safe_area = if area < 0 { 0 } else { area }
   let safe_difficulty = if difficulty < 1 {
     1
@@ -111,7 +111,7 @@ pub fn estimate_mission_workload(area: Int, difficulty: Int) -> Int {
 
 ///|
 /// Estimate required battery for a mission.
-pub fn estimate_required_battery(distance: Int, workload: Int) -> Int {
+pub fn estimate_required_battery(distance : Int, workload : Int) -> Int {
   let safe_distance = if distance < 0 { 0 } else { distance }
   let safe_workload = if workload < 0 { 0 } else { workload }
   safe_distance * 2 + safe_workload / 10 + 10
@@ -119,20 +119,20 @@ pub fn estimate_required_battery(distance: Int, workload: Int) -> Int {
 
 ///|
 /// Check whether a mission is urgent.
-pub fn is_urgent_mission(priority: Int, kind: Int) -> Bool {
+pub fn is_urgent_mission(priority : Int, kind : Int) -> Bool {
   clamp_mission_priority(priority) >= mission_priority_high() ||
   kind == mission_type_emergency()
 }
 
 ///|
 /// Check whether a mission needs payload.
-pub fn mission_needs_payload(kind: Int) -> Bool {
+pub fn mission_needs_payload(kind : Int) -> Bool {
   kind == mission_type_spraying()
 }
 
 ///|
 /// Check whether a mission can be done without payload.
-pub fn mission_allows_empty_payload(kind: Int) -> Bool {
+pub fn mission_allows_empty_payload(kind : Int) -> Bool {
   !mission_needs_payload(kind)
 }
 
@@ -140,7 +140,7 @@ pub fn mission_allows_empty_payload(kind: Int) -> Bool {
 /// Estimate mission score.
 ///
 /// Higher priority and lower workload produce better score.
-pub fn mission_score(priority: Int, workload: Int) -> Int {
+pub fn mission_score(priority : Int, workload : Int) -> Int {
   let safe_priority = clamp_mission_priority(priority)
   let safe_workload = if workload < 0 { 0 } else { workload }
   safe_priority * 100 - safe_workload / 10
@@ -148,19 +148,19 @@ pub fn mission_score(priority: Int, workload: Int) -> Int {
 
 ///|
 /// Check whether a drone battery is enough for a mission.
-pub fn mission_battery_sufficient(battery: Int, required: Int) -> Bool {
+pub fn mission_battery_sufficient(battery : Int, required : Int) -> Bool {
   clamp_battery(battery) >= required
 }
 
 ///|
 /// Check whether a drone can be assigned to a mission.
 pub fn can_assign_mission(
-  drone_status: Int,
-  battery: Int,
-  mission_kind: Int,
-  required_battery: Int,
-  payload: Int,
-  max_payload: Int
+  drone_status : Int,
+  battery : Int,
+  mission_kind : Int,
+  required_battery : Int,
+  payload : Int,
+  max_payload : Int,
 ) -> Bool {
   let base_ok = can_accept_mission(drone_status, battery)
   let battery_ok = mission_battery_sufficient(battery, required_battery)
@@ -174,7 +174,7 @@ pub fn can_assign_mission(
 
 ///|
 /// Convert workload to readable level.
-pub fn workload_level_name(workload: Int) -> String {
+pub fn workload_level_name(workload : Int) -> String {
   if workload >= 800 {
     "heavy"
   } else if workload >= 400 {
@@ -188,7 +188,7 @@ pub fn workload_level_name(workload: Int) -> String {
 
 ///|
 /// Estimate number of drones needed for a mission.
-pub fn estimate_required_drones(workload: Int) -> Int {
+pub fn estimate_required_drones(workload : Int) -> Int {
   if workload <= 0 {
     1
   } else if workload <= 300 {
@@ -204,13 +204,13 @@ pub fn estimate_required_drones(workload: Int) -> Int {
 
 ///|
 /// Check whether mission can be handled by available drones.
-pub fn enough_drones_for_mission(available: Int, workload: Int) -> Bool {
+pub fn enough_drones_for_mission(available : Int, workload : Int) -> Bool {
   available >= estimate_required_drones(workload)
 }
 
 ///|
 /// Estimate mission completion time.
-pub fn estimate_completion_time(workload: Int, drone_count: Int) -> Int {
+pub fn estimate_completion_time(workload : Int, drone_count : Int) -> Int {
   let safe_workload = if workload < 0 { 0 } else { workload }
   let safe_drones = if drone_count <= 0 { 1 } else { drone_count }
   safe_workload / safe_drones + 5
@@ -219,10 +219,10 @@ pub fn estimate_completion_time(workload: Int, drone_count: Int) -> Int {
 ///|
 /// Check whether mission is suitable for immediate dispatch.
 pub fn ready_for_dispatch(
-  available_drones: Int,
-  workload: Int,
-  battery: Int,
-  required_battery: Int
+  available_drones : Int,
+  workload : Int,
+  battery : Int,
+  required_battery : Int,
 ) -> Bool {
   enough_drones_for_mission(available_drones, workload) &&
   mission_battery_sufficient(battery, required_battery)

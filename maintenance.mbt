@@ -36,7 +36,7 @@ pub fn maintenance_state_retired() -> Int {
 
 ///|
 /// Convert maintenance state to readable text.
-pub fn maintenance_state_name(state: Int) -> String {
+pub fn maintenance_state_name(state : Int) -> String {
   match state {
     0 => "healthy"
     1 => "warning"
@@ -91,7 +91,7 @@ pub fn maintenance_fault_navigation() -> Int {
 
 ///|
 /// Convert fault type to readable text.
-pub fn maintenance_fault_name(fault: Int) -> String {
+pub fn maintenance_fault_name(fault : Int) -> String {
   match fault {
     0 => "none"
     1 => "battery"
@@ -106,7 +106,7 @@ pub fn maintenance_fault_name(fault: Int) -> String {
 
 ///|
 /// Clamp score into 0..100.
-pub fn maintenance_clamp_score(value: Int) -> Int {
+pub fn maintenance_clamp_score(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -118,7 +118,7 @@ pub fn maintenance_clamp_score(value: Int) -> Int {
 
 ///|
 /// Clamp count into non-negative range.
-pub fn maintenance_clamp_count(value: Int) -> Int {
+pub fn maintenance_clamp_count(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -128,7 +128,7 @@ pub fn maintenance_clamp_count(value: Int) -> Int {
 
 ///|
 /// Clamp minutes into non-negative range.
-pub fn maintenance_clamp_minutes(value: Int) -> Int {
+pub fn maintenance_clamp_minutes(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -138,7 +138,10 @@ pub fn maintenance_clamp_minutes(value: Int) -> Int {
 
 ///|
 /// Estimate battery wear score.
-pub fn maintenance_battery_wear_score(cycle_count: Int, battery_health: Int) -> Int {
+pub fn maintenance_battery_wear_score(
+  cycle_count : Int,
+  battery_health : Int,
+) -> Int {
   let cycles = maintenance_clamp_count(cycle_count)
   let health = maintenance_clamp_score(battery_health)
   let cycle_penalty = if cycles >= 800 {
@@ -155,7 +158,10 @@ pub fn maintenance_battery_wear_score(cycle_count: Int, battery_health: Int) -> 
 
 ///|
 /// Estimate motor wear score.
-pub fn maintenance_motor_wear_score(flight_hours: Int, vibration_score: Int) -> Int {
+pub fn maintenance_motor_wear_score(
+  flight_hours : Int,
+  vibration_score : Int,
+) -> Int {
   let hours = maintenance_clamp_count(flight_hours)
   let vibration = maintenance_clamp_score(vibration_score)
   let hour_penalty = if hours >= 1000 {
@@ -172,7 +178,10 @@ pub fn maintenance_motor_wear_score(flight_hours: Int, vibration_score: Int) -> 
 
 ///|
 /// Estimate propeller wear score.
-pub fn maintenance_propeller_wear_score(flight_hours: Int, impact_count: Int) -> Int {
+pub fn maintenance_propeller_wear_score(
+  flight_hours : Int,
+  impact_count : Int,
+) -> Int {
   let hours = maintenance_clamp_count(flight_hours)
   let impacts = maintenance_clamp_count(impact_count)
   let hour_penalty = if hours >= 300 {
@@ -189,7 +198,10 @@ pub fn maintenance_propeller_wear_score(flight_hours: Int, impact_count: Int) ->
 
 ///|
 /// Estimate sensor wear score.
-pub fn maintenance_sensor_wear_score(dust_level: Int, calibration_age_days: Int) -> Int {
+pub fn maintenance_sensor_wear_score(
+  dust_level : Int,
+  calibration_age_days : Int,
+) -> Int {
   let dust = maintenance_clamp_score(dust_level)
   let age = maintenance_clamp_count(calibration_age_days)
   let age_penalty = if age >= 180 {
@@ -206,7 +218,10 @@ pub fn maintenance_sensor_wear_score(dust_level: Int, calibration_age_days: Int)
 
 ///|
 /// Estimate communication wear score.
-pub fn maintenance_comm_wear_score(packet_loss_percent: Int, reconnect_count: Int) -> Int {
+pub fn maintenance_comm_wear_score(
+  packet_loss_percent : Int,
+  reconnect_count : Int,
+) -> Int {
   let loss = maintenance_clamp_score(packet_loss_percent)
   let reconnect = maintenance_clamp_count(reconnect_count)
   maintenance_clamp_score(loss * 2 + reconnect * 5)
@@ -214,7 +229,10 @@ pub fn maintenance_comm_wear_score(packet_loss_percent: Int, reconnect_count: In
 
 ///|
 /// Estimate navigation wear score.
-pub fn maintenance_navigation_wear_score(gps_error_meters: Int, compass_drift: Int) -> Int {
+pub fn maintenance_navigation_wear_score(
+  gps_error_meters : Int,
+  compass_drift : Int,
+) -> Int {
   let gps = maintenance_clamp_count(gps_error_meters)
   let drift = maintenance_clamp_score(compass_drift)
   maintenance_clamp_score(gps * 4 + drift)
@@ -222,7 +240,7 @@ pub fn maintenance_navigation_wear_score(gps_error_meters: Int, compass_drift: I
 
 ///|
 /// Convert wear score to maintenance state.
-pub fn maintenance_state_from_wear(wear_score: Int) -> Int {
+pub fn maintenance_state_from_wear(wear_score : Int) -> Int {
   let score = maintenance_clamp_score(wear_score)
   if score >= 85 {
     maintenance_state_grounded()
@@ -237,7 +255,7 @@ pub fn maintenance_state_from_wear(wear_score: Int) -> Int {
 
 ///|
 /// Convert wear score to readable level.
-pub fn maintenance_wear_level_name(wear_score: Int) -> String {
+pub fn maintenance_wear_level_name(wear_score : Int) -> String {
   let score = maintenance_clamp_score(wear_score)
   if score >= 85 {
     "critical"
@@ -253,12 +271,12 @@ pub fn maintenance_wear_level_name(wear_score: Int) -> String {
 ///|
 /// Estimate total maintenance risk score.
 pub fn maintenance_total_risk_score(
-  battery_wear: Int,
-  motor_wear: Int,
-  propeller_wear: Int,
-  sensor_wear: Int,
-  comm_wear: Int,
-  navigation_wear: Int
+  battery_wear : Int,
+  motor_wear : Int,
+  propeller_wear : Int,
+  sensor_wear : Int,
+  comm_wear : Int,
+  navigation_wear : Int,
 ) -> Int {
   let battery = maintenance_clamp_score(battery_wear)
   let motor = maintenance_clamp_score(motor_wear)
@@ -279,13 +297,13 @@ pub fn maintenance_total_risk_score(
 
 ///|
 /// Check whether drone can fly from maintenance state.
-pub fn maintenance_can_fly(state: Int) -> Bool {
+pub fn maintenance_can_fly(state : Int) -> Bool {
   state == maintenance_state_healthy() || state == maintenance_state_warning()
 }
 
 ///|
 /// Check whether drone must be grounded.
-pub fn maintenance_must_ground(state: Int, risk_score: Int) -> Bool {
+pub fn maintenance_must_ground(state : Int, risk_score : Int) -> Bool {
   state == maintenance_state_grounded() ||
   state == maintenance_state_retired() ||
   maintenance_clamp_score(risk_score) >= 85
@@ -294,9 +312,9 @@ pub fn maintenance_must_ground(state: Int, risk_score: Int) -> Bool {
 ///|
 /// Estimate service priority score.
 pub fn maintenance_priority_score(
-  risk_score: Int,
-  mission_importance: Int,
-  days_since_service: Int
+  risk_score : Int,
+  mission_importance : Int,
+  days_since_service : Int,
 ) -> Int {
   let risk = maintenance_clamp_score(risk_score)
   let importance = maintenance_clamp_score(mission_importance)
@@ -315,7 +333,7 @@ pub fn maintenance_priority_score(
 
 ///|
 /// Convert service priority to readable text.
-pub fn maintenance_priority_name(priority: Int) -> String {
+pub fn maintenance_priority_name(priority : Int) -> String {
   let score = maintenance_clamp_score(priority)
   if score >= 85 {
     "urgent"
@@ -330,7 +348,7 @@ pub fn maintenance_priority_name(priority: Int) -> String {
 
 ///|
 /// Estimate repair minutes by fault type and severity.
-pub fn maintenance_repair_minutes(fault: Int, severity: Int) -> Int {
+pub fn maintenance_repair_minutes(fault : Int, severity : Int) -> Int {
   let safe_severity = maintenance_clamp_score(severity)
   let base = if fault == maintenance_fault_battery() {
     30
@@ -353,15 +371,19 @@ pub fn maintenance_repair_minutes(fault: Int, severity: Int) -> Int {
 ///|
 /// Estimate whether repair can finish before mission.
 pub fn maintenance_repair_fits_window(
-  repair_minutes: Int,
-  available_window_minutes: Int
+  repair_minutes : Int,
+  available_window_minutes : Int,
 ) -> Bool {
-  maintenance_clamp_minutes(repair_minutes) <= maintenance_clamp_minutes(available_window_minutes)
+  maintenance_clamp_minutes(repair_minutes) <=
+  maintenance_clamp_minutes(available_window_minutes)
 }
 
 ///|
 /// Estimate spare part need count.
-pub fn maintenance_spare_parts_needed(fault: Int, affected_drones: Int) -> Int {
+pub fn maintenance_spare_parts_needed(
+  fault : Int,
+  affected_drones : Int,
+) -> Int {
   let count = maintenance_clamp_count(affected_drones)
   if fault == maintenance_fault_none() {
     0
@@ -374,13 +396,16 @@ pub fn maintenance_spare_parts_needed(fault: Int, affected_drones: Int) -> Int {
 
 ///|
 /// Check whether spare parts are enough.
-pub fn maintenance_spare_parts_enough(needed: Int, stock: Int) -> Bool {
+pub fn maintenance_spare_parts_enough(needed : Int, stock : Int) -> Bool {
   maintenance_clamp_count(stock) >= maintenance_clamp_count(needed)
 }
 
 ///|
 /// Estimate maintenance backlog.
-pub fn maintenance_backlog_count(waiting_count: Int, service_capacity: Int) -> Int {
+pub fn maintenance_backlog_count(
+  waiting_count : Int,
+  service_capacity : Int,
+) -> Int {
   let waiting = maintenance_clamp_count(waiting_count)
   let capacity = maintenance_clamp_count(service_capacity)
   if capacity >= waiting {
@@ -392,7 +417,7 @@ pub fn maintenance_backlog_count(waiting_count: Int, service_capacity: Int) -> I
 
 ///|
 /// Convert backlog to readable text.
-pub fn maintenance_backlog_name(backlog: Int) -> String {
+pub fn maintenance_backlog_name(backlog : Int) -> String {
   let safe_backlog = maintenance_clamp_count(backlog)
   if safe_backlog >= 10 {
     "severe"
@@ -409,7 +434,11 @@ pub fn maintenance_backlog_name(backlog: Int) -> String {
 
 ///|
 /// Estimate service capacity for technicians.
-pub fn maintenance_service_capacity(technician_count: Int, minutes_per_shift: Int, average_repair_minutes: Int) -> Int {
+pub fn maintenance_service_capacity(
+  technician_count : Int,
+  minutes_per_shift : Int,
+  average_repair_minutes : Int,
+) -> Int {
   let tech = maintenance_clamp_count(technician_count)
   let shift = maintenance_clamp_minutes(minutes_per_shift)
   let avg = maintenance_clamp_minutes(average_repair_minutes)
@@ -423,9 +452,9 @@ pub fn maintenance_service_capacity(technician_count: Int, minutes_per_shift: In
 ///|
 /// Check whether predictive maintenance should trigger.
 pub fn maintenance_predictive_trigger(
-  risk_score: Int,
-  days_since_service: Int,
-  upcoming_mission_importance: Int
+  risk_score : Int,
+  days_since_service : Int,
+  upcoming_mission_importance : Int,
 ) -> Bool {
   let risk = maintenance_clamp_score(risk_score)
   let days = maintenance_clamp_count(days_since_service)
@@ -443,7 +472,9 @@ pub fn maintenance_summary() -> Unit {
   let comm = maintenance_comm_wear_score(4, 2)
   let nav = maintenance_navigation_wear_score(3, 12)
 
-  let risk = maintenance_total_risk_score(battery, motor, propeller, sensor, comm, nav)
+  let risk = maintenance_total_risk_score(
+    battery, motor, propeller, sensor, comm, nav,
+  )
   let state = maintenance_state_from_wear(risk)
   let priority = maintenance_priority_score(risk, 85, 45)
   let repair = maintenance_repair_minutes(maintenance_fault_motor(), risk)

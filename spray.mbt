@@ -29,7 +29,7 @@ pub fn spray_mode_high() -> Int {
 
 ///|
 /// Spray mode name.
-pub fn spray_mode_name(mode: Int) -> String {
+pub fn spray_mode_name(mode : Int) -> String {
   match mode {
     0 => "off"
     1 => "low"
@@ -59,7 +59,7 @@ pub fn spray_nozzle_cone() -> Int {
 
 ///|
 /// Nozzle type name.
-pub fn spray_nozzle_name(nozzle: Int) -> String {
+pub fn spray_nozzle_name(nozzle : Int) -> String {
   match nozzle {
     1 => "mist"
     2 => "fan"
@@ -70,7 +70,7 @@ pub fn spray_nozzle_name(nozzle: Int) -> String {
 
 ///|
 /// Clamp non-negative integer.
-pub fn spray_clamp_non_negative(value: Int) -> Int {
+pub fn spray_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -80,7 +80,7 @@ pub fn spray_clamp_non_negative(value: Int) -> Int {
 
 ///|
 /// Clamp percent to 0..100.
-pub fn spray_clamp_percent(value: Int) -> Int {
+pub fn spray_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -92,7 +92,7 @@ pub fn spray_clamp_percent(value: Int) -> Int {
 
 ///|
 /// Estimate base liquid flow per minute.
-pub fn spray_base_flow_liter_per_minute(mode: Int) -> Int {
+pub fn spray_base_flow_liter_per_minute(mode : Int) -> Int {
   if mode == spray_mode_off() {
     0
   } else if mode == spray_mode_low() {
@@ -108,7 +108,7 @@ pub fn spray_base_flow_liter_per_minute(mode: Int) -> Int {
 
 ///|
 /// Estimate nozzle flow bonus.
-pub fn spray_nozzle_flow_bonus(nozzle: Int) -> Int {
+pub fn spray_nozzle_flow_bonus(nozzle : Int) -> Int {
   if nozzle == spray_nozzle_mist() {
     0
   } else if nozzle == spray_nozzle_fan() {
@@ -122,13 +122,13 @@ pub fn spray_nozzle_flow_bonus(nozzle: Int) -> Int {
 
 ///|
 /// Estimate total liquid flow per minute.
-pub fn spray_flow_liter_per_minute(mode: Int, nozzle: Int) -> Int {
+pub fn spray_flow_liter_per_minute(mode : Int, nozzle : Int) -> Int {
   spray_base_flow_liter_per_minute(mode) + spray_nozzle_flow_bonus(nozzle)
 }
 
 ///|
 /// Estimate spray width in meters.
-pub fn spray_width_meters(nozzle: Int, altitude_meters: Int) -> Int {
+pub fn spray_width_meters(nozzle : Int, altitude_meters : Int) -> Int {
   let altitude = spray_clamp_non_negative(altitude_meters)
   let base = if nozzle == spray_nozzle_mist() {
     3
@@ -144,7 +144,7 @@ pub fn spray_width_meters(nozzle: Int, altitude_meters: Int) -> Int {
 
 ///|
 /// Estimate recommended spray speed.
-pub fn spray_recommended_speed_mps(mode: Int, wind_speed: Int) -> Int {
+pub fn spray_recommended_speed_mps(mode : Int, wind_speed : Int) -> Int {
   let wind = spray_clamp_non_negative(wind_speed)
   let base = if mode == spray_mode_low() {
     7
@@ -175,19 +175,19 @@ pub fn spray_recommended_speed_mps(mode: Int, wind_speed: Int) -> Int {
 
 ///|
 /// Check whether wind is safe for spraying.
-pub fn spray_wind_safe(wind_speed: Int) -> Bool {
+pub fn spray_wind_safe(wind_speed : Int) -> Bool {
   spray_clamp_non_negative(wind_speed) <= 10
 }
 
 ///|
 /// Check whether temperature is safe for spraying.
-pub fn spray_temperature_safe(temperature_c: Int) -> Bool {
+pub fn spray_temperature_safe(temperature_c : Int) -> Bool {
   temperature_c >= 5 && temperature_c <= 35
 }
 
 ///|
 /// Check whether humidity is safe for spraying.
-pub fn spray_humidity_safe(humidity_percent: Int) -> Bool {
+pub fn spray_humidity_safe(humidity_percent : Int) -> Bool {
   let humidity = spray_clamp_percent(humidity_percent)
   humidity >= 30 && humidity <= 90
 }
@@ -195,9 +195,9 @@ pub fn spray_humidity_safe(humidity_percent: Int) -> Bool {
 ///|
 /// Check whether weather is safe for spraying.
 pub fn spray_weather_safe(
-  wind_speed: Int,
-  temperature_c: Int,
-  humidity_percent: Int
+  wind_speed : Int,
+  temperature_c : Int,
+  humidity_percent : Int,
 ) -> Bool {
   spray_wind_safe(wind_speed) &&
   spray_temperature_safe(temperature_c) &&
@@ -207,8 +207,8 @@ pub fn spray_weather_safe(
 ///|
 /// Estimate liquid required for area.
 pub fn spray_liquid_required_liter(
-  area_square_meter: Int,
-  dose_liter_per_1000_square_meter: Int
+  area_square_meter : Int,
+  dose_liter_per_1000_square_meter : Int,
 ) -> Int {
   let area = spray_clamp_non_negative(area_square_meter)
   let dose = spray_clamp_non_negative(dose_liter_per_1000_square_meter)
@@ -218,9 +218,9 @@ pub fn spray_liquid_required_liter(
 ///|
 /// Estimate spray duration in minutes.
 pub fn spray_duration_minutes(
-  liquid_liter: Int,
-  mode: Int,
-  nozzle: Int
+  liquid_liter : Int,
+  mode : Int,
+  nozzle : Int,
 ) -> Int {
   let liquid = spray_clamp_non_negative(liquid_liter)
   let flow = spray_flow_liter_per_minute(mode, nozzle)
@@ -233,7 +233,7 @@ pub fn spray_duration_minutes(
 
 ///|
 /// Estimate area covered per minute.
-pub fn spray_area_per_minute(speed_mps: Int, width_meters: Int) -> Int {
+pub fn spray_area_per_minute(speed_mps : Int, width_meters : Int) -> Int {
   let speed = spray_clamp_non_negative(speed_mps)
   let width = spray_clamp_non_negative(width_meters)
   speed * width * 60
@@ -241,7 +241,7 @@ pub fn spray_area_per_minute(speed_mps: Int, width_meters: Int) -> Int {
 
 ///|
 /// Estimate coverage percent.
-pub fn spray_coverage_percent(sprayed_area: Int, field_area: Int) -> Int {
+pub fn spray_coverage_percent(sprayed_area : Int, field_area : Int) -> Int {
   let sprayed = spray_clamp_non_negative(sprayed_area)
   let field = spray_clamp_non_negative(field_area)
   if field <= 0 {
@@ -253,7 +253,7 @@ pub fn spray_coverage_percent(sprayed_area: Int, field_area: Int) -> Int {
 
 ///|
 /// Estimate remaining liquid after spraying.
-pub fn spray_remaining_liter(tank_liter: Int, used_liter: Int) -> Int {
+pub fn spray_remaining_liter(tank_liter : Int, used_liter : Int) -> Int {
   let tank = spray_clamp_non_negative(tank_liter)
   let used = spray_clamp_non_negative(used_liter)
   if used >= tank {
@@ -265,19 +265,20 @@ pub fn spray_remaining_liter(tank_liter: Int, used_liter: Int) -> Int {
 
 ///|
 /// Check whether tank has enough liquid.
-pub fn spray_tank_enough(tank_liter: Int, required_liter: Int) -> Bool {
-  spray_clamp_non_negative(tank_liter) >= spray_clamp_non_negative(required_liter)
+pub fn spray_tank_enough(tank_liter : Int, required_liter : Int) -> Bool {
+  spray_clamp_non_negative(tank_liter) >=
+  spray_clamp_non_negative(required_liter)
 }
 
 ///|
 /// Estimate refill requirement.
-pub fn spray_refill_required(tank_liter: Int, required_liter: Int) -> Bool {
+pub fn spray_refill_required(tank_liter : Int, required_liter : Int) -> Bool {
   !spray_tank_enough(tank_liter, required_liter)
 }
 
 ///|
 /// Estimate refill amount.
-pub fn spray_refill_amount_liter(tank_liter: Int, required_liter: Int) -> Int {
+pub fn spray_refill_amount_liter(tank_liter : Int, required_liter : Int) -> Int {
   let tank = spray_clamp_non_negative(tank_liter)
   let required = spray_clamp_non_negative(required_liter)
   if required > tank {
@@ -290,10 +291,10 @@ pub fn spray_refill_amount_liter(tank_liter: Int, required_liter: Int) -> Int {
 ///|
 /// Estimate spray quality score.
 pub fn spray_quality_score(
-  wind_speed: Int,
-  temperature_c: Int,
-  humidity_percent: Int,
-  mode: Int
+  wind_speed : Int,
+  temperature_c : Int,
+  humidity_percent : Int,
+  mode : Int,
 ) -> Int {
   let mut score = 100
 
@@ -320,7 +321,7 @@ pub fn spray_quality_score(
 
 ///|
 /// Convert spray quality score to level.
-pub fn spray_quality_level(score: Int) -> String {
+pub fn spray_quality_level(score : Int) -> String {
   let safe_score = spray_clamp_percent(score)
   if safe_score >= 85 {
     "excellent"
@@ -336,11 +337,11 @@ pub fn spray_quality_level(score: Int) -> String {
 ///|
 /// Check whether spray mission can start.
 pub fn spray_can_start(
-  tank_liter: Int,
-  required_liter: Int,
-  wind_speed: Int,
-  temperature_c: Int,
-  humidity_percent: Int
+  tank_liter : Int,
+  required_liter : Int,
+  wind_speed : Int,
+  temperature_c : Int,
+  humidity_percent : Int,
 ) -> Bool {
   spray_tank_enough(tank_liter, required_liter) &&
   spray_weather_safe(wind_speed, temperature_c, humidity_percent)

@@ -2,7 +2,7 @@
 /// Flight control module for AgriDroneSwarm.
 
 ///|
-pub fn control_clamp_non_negative(value: Int) -> Int {
+pub fn control_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -11,7 +11,7 @@ pub fn control_clamp_non_negative(value: Int) -> Int {
 }
 
 ///|
-pub fn control_clamp_percent(value: Int) -> Int {
+pub fn control_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -23,8 +23,8 @@ pub fn control_clamp_percent(value: Int) -> Int {
 
 ///|
 pub fn control_clamp_altitude_meters(
-  altitude_meters: Int,
-  max_altitude_meters: Int
+  altitude_meters : Int,
+  max_altitude_meters : Int,
 ) -> Int {
   let altitude = control_clamp_non_negative(altitude_meters)
   let max_altitude = control_clamp_non_negative(max_altitude_meters)
@@ -39,10 +39,7 @@ pub fn control_clamp_altitude_meters(
 }
 
 ///|
-pub fn control_clamp_speed_kmh(
-  speed_kmh: Int,
-  max_speed_kmh: Int
-) -> Int {
+pub fn control_clamp_speed_kmh(speed_kmh : Int, max_speed_kmh : Int) -> Int {
   let speed = control_clamp_non_negative(speed_kmh)
   let max_speed = control_clamp_non_negative(max_speed_kmh)
 
@@ -56,7 +53,7 @@ pub fn control_clamp_speed_kmh(
 }
 
 ///|
-pub fn control_battery_risk_level(battery_percent: Int) -> String {
+pub fn control_battery_risk_level(battery_percent : Int) -> String {
   let battery = control_clamp_percent(battery_percent)
 
   if battery <= 10 {
@@ -71,7 +68,7 @@ pub fn control_battery_risk_level(battery_percent: Int) -> String {
 }
 
 ///|
-pub fn control_signal_risk_level(signal_percent: Int) -> String {
+pub fn control_signal_risk_level(signal_percent : Int) -> String {
   let signal = control_clamp_percent(signal_percent)
 
   if signal <= 15 {
@@ -87,9 +84,9 @@ pub fn control_signal_risk_level(signal_percent: Int) -> String {
 
 ///|
 pub fn control_should_return_home(
-  battery_percent: Int,
-  signal_percent: Int,
-  distance_to_base_meters: Int
+  battery_percent : Int,
+  signal_percent : Int,
+  distance_to_base_meters : Int,
 ) -> Bool {
   let battery = control_clamp_percent(battery_percent)
   let signal = control_clamp_percent(signal_percent)
@@ -100,9 +97,9 @@ pub fn control_should_return_home(
 
 ///|
 pub fn control_should_emergency_land(
-  battery_percent: Int,
-  signal_percent: Int,
-  obstacle_distance_meters: Int
+  battery_percent : Int,
+  signal_percent : Int,
+  obstacle_distance_meters : Int,
 ) -> Bool {
   let battery = control_clamp_percent(battery_percent)
   let signal = control_clamp_percent(signal_percent)
@@ -113,9 +110,9 @@ pub fn control_should_emergency_land(
 
 ///|
 pub fn control_altitude_status(
-  altitude_meters: Int,
-  min_safe_altitude_meters: Int,
-  max_safe_altitude_meters: Int
+  altitude_meters : Int,
+  min_safe_altitude_meters : Int,
+  max_safe_altitude_meters : Int,
 ) -> String {
   let altitude = control_clamp_non_negative(altitude_meters)
   let min_safe = control_clamp_non_negative(min_safe_altitude_meters)
@@ -132,8 +129,8 @@ pub fn control_altitude_status(
 
 ///|
 pub fn control_speed_status(
-  speed_kmh: Int,
-  max_safe_speed_kmh: Int
+  speed_kmh : Int,
+  max_safe_speed_kmh : Int,
 ) -> String {
   let speed = control_clamp_non_negative(speed_kmh)
   let max_safe = control_clamp_non_negative(max_safe_speed_kmh)
@@ -151,8 +148,8 @@ pub fn control_speed_status(
 
 ///|
 pub fn control_operation_mode(
-  should_return_home: Bool,
-  should_emergency_land: Bool
+  should_return_home : Bool,
+  should_emergency_land : Bool,
 ) -> String {
   if should_emergency_land {
     "emergency_land"
@@ -165,10 +162,10 @@ pub fn control_operation_mode(
 
 ///|
 pub fn control_safety_score(
-  battery_percent: Int,
-  signal_percent: Int,
-  altitude_safe: Bool,
-  speed_safe: Bool
+  battery_percent : Int,
+  signal_percent : Int,
+  altitude_safe : Bool,
+  speed_safe : Bool,
 ) -> Int {
   let battery = control_clamp_percent(battery_percent)
   let signal = control_clamp_percent(signal_percent)
@@ -176,7 +173,7 @@ pub fn control_safety_score(
   let speed_score = if speed_safe { 100 } else { 40 }
 
   control_clamp_percent(
-    battery / 4 + signal / 4 + altitude_score / 4 + speed_score / 4
+    battery / 4 + signal / 4 + altitude_score / 4 + speed_score / 4,
   )
 }
 
@@ -197,19 +194,13 @@ pub fn control_summary() -> Unit {
   let battery_risk = control_battery_risk_level(battery)
   let signal_risk = control_signal_risk_level(signal)
   let return_home = control_should_return_home(
-    battery,
-    signal,
-    distance_to_base
+    battery, signal, distance_to_base,
   )
   let emergency_land = control_should_emergency_land(
-    battery,
-    signal,
-    obstacle_distance
+    battery, signal, obstacle_distance,
   )
   let altitude_status = control_altitude_status(
-    safe_altitude,
-    min_safe_altitude,
-    max_altitude
+    safe_altitude, min_safe_altitude, max_altitude,
   )
   let speed_status = control_speed_status(safe_speed, max_speed)
   let mode = control_operation_mode(return_home, emergency_land)
@@ -217,7 +208,7 @@ pub fn control_summary() -> Unit {
     battery,
     signal,
     altitude_status == "safe",
-    speed_status == "safe"
+    speed_status == "safe",
   )
 
   println("Control Summary")

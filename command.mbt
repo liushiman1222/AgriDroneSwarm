@@ -2,7 +2,7 @@
 /// Command module for AgriDroneSwarm.
 
 ///|
-pub fn command_clamp_non_negative(value: Int) -> Int {
+pub fn command_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -11,7 +11,7 @@ pub fn command_clamp_non_negative(value: Int) -> Int {
 }
 
 ///|
-pub fn command_clamp_percent(value: Int) -> Int {
+pub fn command_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -22,7 +22,7 @@ pub fn command_clamp_percent(value: Int) -> Int {
 }
 
 ///|
-pub fn command_priority(command: String) -> Int {
+pub fn command_priority(command : String) -> Int {
   if command == "emergency_land" {
     100
   } else if command == "return_home" {
@@ -45,12 +45,12 @@ pub fn command_priority(command: String) -> Int {
 }
 
 ///|
-pub fn command_is_emergency(command: String) -> Bool {
+pub fn command_is_emergency(command : String) -> Bool {
   command == "emergency_land" || command == "return_home"
 }
 
 ///|
-pub fn command_requires_airborne(command: String) -> Bool {
+pub fn command_requires_airborne(command : String) -> Bool {
   command == "pause" ||
   command == "resume" ||
   command == "return_home" ||
@@ -60,10 +60,10 @@ pub fn command_requires_airborne(command: String) -> Bool {
 
 ///|
 pub fn command_can_execute(
-  command: String,
-  is_airborne: Bool,
-  battery_percent: Int,
-  signal_percent: Int
+  command : String,
+  is_airborne : Bool,
+  battery_percent : Int,
+  signal_percent : Int,
 ) -> Bool {
   let battery = command_clamp_percent(battery_percent)
   let signal = command_clamp_percent(signal_percent)
@@ -82,10 +82,7 @@ pub fn command_can_execute(
 }
 
 ///|
-pub fn command_next_state(
-  command: String,
-  current_state: String
-) -> String {
+pub fn command_next_state(command : String, current_state : String) -> String {
   if command == "takeoff" && current_state == "idle" {
     "airborne"
   } else if command == "pause" && current_state == "airborne" {
@@ -105,8 +102,8 @@ pub fn command_next_state(
 
 ///|
 pub fn command_spray_state(
-  command: String,
-  current_spray_enabled: Bool
+  command : String,
+  current_spray_enabled : Bool,
 ) -> Bool {
   if command == "spray_on" {
     true
@@ -118,7 +115,7 @@ pub fn command_spray_state(
 }
 
 ///|
-pub fn command_ack_timeout_ms(command: String) -> Int {
+pub fn command_ack_timeout_ms(command : String) -> Int {
   if command_is_emergency(command) {
     300
   } else if command == "land" {
@@ -131,7 +128,7 @@ pub fn command_ack_timeout_ms(command: String) -> Int {
 }
 
 ///|
-pub fn command_retry_limit(command: String) -> Int {
+pub fn command_retry_limit(command : String) -> Int {
   if command_is_emergency(command) {
     5
   } else if command == "takeoff" || command == "land" {
@@ -143,9 +140,9 @@ pub fn command_retry_limit(command: String) -> Int {
 
 ///|
 pub fn command_delivery_score(
-  signal_percent: Int,
-  retry_count: Int,
-  ack_timeout_ms: Int
+  signal_percent : Int,
+  retry_count : Int,
+  ack_timeout_ms : Int,
 ) -> Int {
   let signal = command_clamp_percent(signal_percent)
   let retries = command_clamp_non_negative(retry_count)
@@ -158,10 +155,7 @@ pub fn command_delivery_score(
 }
 
 ///|
-pub fn command_status(
-  can_execute: Bool,
-  delivery_score: Int
-) -> String {
+pub fn command_status(can_execute : Bool, delivery_score : Int) -> String {
   let score = command_clamp_percent(delivery_score)
 
   if !can_execute {
@@ -188,21 +182,12 @@ pub fn command_summary() -> Unit {
   let priority = command_priority(command)
   let emergency = command_is_emergency(command)
   let requires_airborne = command_requires_airborne(command)
-  let can_execute = command_can_execute(
-    command,
-    is_airborne,
-    battery,
-    signal
-  )
+  let can_execute = command_can_execute(command, is_airborne, battery, signal)
   let next_state = command_next_state(command, current_state)
   let next_spray = command_spray_state(command, spray_enabled)
   let ack_timeout = command_ack_timeout_ms(command)
   let retry_limit = command_retry_limit(command)
-  let delivery_score = command_delivery_score(
-    signal,
-    retry_count,
-    ack_timeout
-  )
+  let delivery_score = command_delivery_score(signal, retry_count, ack_timeout)
   let status = command_status(can_execute, delivery_score)
 
   println("Command Summary")

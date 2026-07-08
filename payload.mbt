@@ -4,7 +4,7 @@
 
 ///|
 /// Clamp non-negative integer.
-pub fn payload_clamp_non_negative(value: Int) -> Int {
+pub fn payload_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -14,7 +14,7 @@ pub fn payload_clamp_non_negative(value: Int) -> Int {
 
 ///|
 /// Clamp percent to 0..100.
-pub fn payload_clamp_percent(value: Int) -> Int {
+pub fn payload_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -26,7 +26,7 @@ pub fn payload_clamp_percent(value: Int) -> Int {
 
 ///|
 /// Clamp value to max capacity.
-pub fn payload_clamp_capacity(value: Int, capacity: Int) -> Int {
+pub fn payload_clamp_capacity(value : Int, capacity : Int) -> Int {
   let safe_value = payload_clamp_non_negative(value)
   let safe_capacity = payload_clamp_non_negative(capacity)
 
@@ -39,7 +39,7 @@ pub fn payload_clamp_capacity(value: Int, capacity: Int) -> Int {
 
 ///|
 /// Calculate payload percent.
-pub fn payload_percent(current_liters: Int, capacity_liters: Int) -> Int {
+pub fn payload_percent(current_liters : Int, capacity_liters : Int) -> Int {
   let current = payload_clamp_non_negative(current_liters)
   let capacity = payload_clamp_non_negative(capacity_liters)
 
@@ -52,7 +52,7 @@ pub fn payload_percent(current_liters: Int, capacity_liters: Int) -> Int {
 
 ///|
 /// Calculate remaining liquid after usage.
-pub fn payload_remaining_liters(current_liters: Int, used_liters: Int) -> Int {
+pub fn payload_remaining_liters(current_liters : Int, used_liters : Int) -> Int {
   let current = payload_clamp_non_negative(current_liters)
   let used = payload_clamp_non_negative(used_liters)
 
@@ -65,7 +65,10 @@ pub fn payload_remaining_liters(current_liters: Int, used_liters: Int) -> Int {
 
 ///|
 /// Calculate how many liters are needed to refill.
-pub fn payload_refill_needed_liters(current_liters: Int, capacity_liters: Int) -> Int {
+pub fn payload_refill_needed_liters(
+  current_liters : Int,
+  capacity_liters : Int,
+) -> Int {
   let current = payload_clamp_capacity(current_liters, capacity_liters)
   let capacity = payload_clamp_non_negative(capacity_liters)
 
@@ -79,8 +82,8 @@ pub fn payload_refill_needed_liters(current_liters: Int, capacity_liters: Int) -
 ///|
 /// Estimate spray duration in minutes.
 pub fn payload_spray_duration_minutes(
-  current_liters: Int,
-  spray_rate_liters_per_minute: Int
+  current_liters : Int,
+  spray_rate_liters_per_minute : Int,
 ) -> Int {
   let current = payload_clamp_non_negative(current_liters)
   let rate = payload_clamp_non_negative(spray_rate_liters_per_minute)
@@ -95,8 +98,8 @@ pub fn payload_spray_duration_minutes(
 ///|
 /// Estimate liquid required for field area.
 pub fn payload_required_liters(
-  field_area_square_meter: Int,
-  liters_per_100_square_meter: Int
+  field_area_square_meter : Int,
+  liters_per_100_square_meter : Int,
 ) -> Int {
   let area = payload_clamp_non_negative(field_area_square_meter)
   let rate = payload_clamp_non_negative(liters_per_100_square_meter)
@@ -111,8 +114,8 @@ pub fn payload_required_liters(
 ///|
 /// Estimate liquid usage for planned minutes.
 pub fn payload_usage_liters(
-  spray_minutes: Int,
-  spray_rate_liters_per_minute: Int
+  spray_minutes : Int,
+  spray_rate_liters_per_minute : Int,
 ) -> Int {
   let minutes = payload_clamp_non_negative(spray_minutes)
   let rate = payload_clamp_non_negative(spray_rate_liters_per_minute)
@@ -122,13 +125,18 @@ pub fn payload_usage_liters(
 
 ///|
 /// Check whether payload is enough for required liters.
-pub fn payload_enough(current_liters: Int, required_liters: Int) -> Bool {
-  payload_clamp_non_negative(current_liters) >= payload_clamp_non_negative(required_liters)
+pub fn payload_enough(current_liters : Int, required_liters : Int) -> Bool {
+  payload_clamp_non_negative(current_liters) >=
+  payload_clamp_non_negative(required_liters)
 }
 
 ///|
 /// Check whether refill is needed.
-pub fn payload_need_refill(current_liters: Int, required_liters: Int, reserve_liters: Int) -> Bool {
+pub fn payload_need_refill(
+  current_liters : Int,
+  required_liters : Int,
+  reserve_liters : Int,
+) -> Bool {
   let current = payload_clamp_non_negative(current_liters)
   let required = payload_clamp_non_negative(required_liters)
   let reserve = payload_clamp_non_negative(reserve_liters)
@@ -139,19 +147,24 @@ pub fn payload_need_refill(current_liters: Int, required_liters: Int, reserve_li
 ///|
 /// Estimate payload weight in kg.
 /// Approximation: 1 liter liquid = 1 kg.
-pub fn payload_weight_kg(current_liters: Int, empty_tank_kg: Int) -> Int {
-  payload_clamp_non_negative(current_liters) + payload_clamp_non_negative(empty_tank_kg)
+pub fn payload_weight_kg(current_liters : Int, empty_tank_kg : Int) -> Int {
+  payload_clamp_non_negative(current_liters) +
+  payload_clamp_non_negative(empty_tank_kg)
 }
 
 ///|
 /// Check whether payload weight is safe.
-pub fn payload_weight_safe(payload_weight_kg_value: Int, max_payload_kg: Int) -> Bool {
-  payload_clamp_non_negative(payload_weight_kg_value) <= payload_clamp_non_negative(max_payload_kg)
+pub fn payload_weight_safe(
+  payload_weight_kg_value : Int,
+  max_payload_kg : Int,
+) -> Bool {
+  payload_clamp_non_negative(payload_weight_kg_value) <=
+  payload_clamp_non_negative(max_payload_kg)
 }
 
 ///|
 /// Estimate flight speed penalty caused by payload.
-pub fn payload_speed_penalty_percent(payload_percent_value: Int) -> Int {
+pub fn payload_speed_penalty_percent(payload_percent_value : Int) -> Int {
   let percent = payload_clamp_percent(payload_percent_value)
 
   if percent >= 90 {
@@ -169,7 +182,7 @@ pub fn payload_speed_penalty_percent(payload_percent_value: Int) -> Int {
 
 ///|
 /// Estimate battery penalty caused by payload.
-pub fn payload_battery_penalty_percent(payload_percent_value: Int) -> Int {
+pub fn payload_battery_penalty_percent(payload_percent_value : Int) -> Int {
   let percent = payload_clamp_percent(payload_percent_value)
 
   if percent >= 90 {
@@ -187,7 +200,7 @@ pub fn payload_battery_penalty_percent(payload_percent_value: Int) -> Int {
 
 ///|
 /// Estimate payload balance score.
-pub fn payload_balance_score(left_liters: Int, right_liters: Int) -> Int {
+pub fn payload_balance_score(left_liters : Int, right_liters : Int) -> Int {
   let left = payload_clamp_non_negative(left_liters)
   let right = payload_clamp_non_negative(right_liters)
   let total = left + right
@@ -195,11 +208,7 @@ pub fn payload_balance_score(left_liters: Int, right_liters: Int) -> Int {
   if total <= 0 {
     100
   } else {
-    let diff = if left >= right {
-      left - right
-    } else {
-      right - left
-    }
+    let diff = if left >= right { left - right } else { right - left }
     payload_clamp_percent(100 - diff * 100 / total)
   }
 }
@@ -207,25 +216,17 @@ pub fn payload_balance_score(left_liters: Int, right_liters: Int) -> Int {
 ///|
 /// Estimate payload risk score.
 pub fn payload_risk_score(
-  payload_percent_value: Int,
-  balance_score: Int,
-  weight_safe: Bool,
-  need_refill: Bool
+  payload_percent_value : Int,
+  balance_score : Int,
+  weight_safe : Bool,
+  need_refill : Bool,
 ) -> Int {
   let percent = payload_clamp_percent(payload_percent_value)
   let balance = payload_clamp_percent(balance_score)
 
-  let weight_risk = if weight_safe {
-    0
-  } else {
-    35
-  }
+  let weight_risk = if weight_safe { 0 } else { 35 }
 
-  let refill_risk = if need_refill {
-    25
-  } else {
-    0
-  }
+  let refill_risk = if need_refill { 25 } else { 0 }
 
   let load_risk = if percent >= 95 {
     25
@@ -237,12 +238,14 @@ pub fn payload_risk_score(
 
   let balance_risk = 100 - balance
 
-  payload_clamp_percent(weight_risk + refill_risk + load_risk + balance_risk / 2)
+  payload_clamp_percent(
+    weight_risk + refill_risk + load_risk + balance_risk / 2,
+  )
 }
 
 ///|
 /// Convert payload risk score to level.
-pub fn payload_risk_level(score: Int) -> String {
+pub fn payload_risk_level(score : Int) -> String {
   let safe_score = payload_clamp_percent(score)
 
   if safe_score >= 80 {
@@ -258,7 +261,11 @@ pub fn payload_risk_level(score: Int) -> String {
 
 ///|
 /// Recommend payload action.
-pub fn payload_action(risk_score: Int, need_refill: Bool, weight_safe: Bool) -> String {
+pub fn payload_action(
+  risk_score : Int,
+  need_refill : Bool,
+  weight_safe : Bool,
+) -> String {
   let risk = payload_clamp_percent(risk_score)
 
   if !weight_safe {
@@ -279,8 +286,8 @@ pub fn payload_action(risk_score: Int, need_refill: Bool, weight_safe: Bool) -> 
 ///|
 /// Estimate mission count before refill.
 pub fn payload_mission_count_before_refill(
-  current_liters: Int,
-  required_per_mission_liters: Int
+  current_liters : Int,
+  required_per_mission_liters : Int,
 ) -> Int {
   let current = payload_clamp_non_negative(current_liters)
   let required = payload_clamp_non_negative(required_per_mission_liters)
@@ -307,7 +314,9 @@ pub fn payload_summary() -> Unit {
   let right_tank = 11
 
   let percent = payload_percent(current, capacity)
-  let required = payload_required_liters(field_area, liters_per_100_square_meter)
+  let required = payload_required_liters(
+    field_area, liters_per_100_square_meter,
+  )
   let usage = payload_usage_liters(6, spray_rate)
   let remaining = payload_remaining_liters(current, usage)
   let refill_needed = payload_refill_needed_liters(current, capacity)

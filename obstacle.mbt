@@ -40,7 +40,7 @@ pub fn obstacle_type_human() -> Int {
 
 ///|
 /// Obstacle type name.
-pub fn obstacle_type_name(kind: Int) -> String {
+pub fn obstacle_type_name(kind : Int) -> String {
   match kind {
     1 => "tree"
     2 => "pole"
@@ -53,7 +53,7 @@ pub fn obstacle_type_name(kind: Int) -> String {
 
 ///|
 /// Clamp non-negative value.
-pub fn obstacle_clamp_non_negative(value: Int) -> Int {
+pub fn obstacle_clamp_non_negative(value : Int) -> Int {
   if value < 0 {
     0
   } else {
@@ -63,7 +63,7 @@ pub fn obstacle_clamp_non_negative(value: Int) -> Int {
 
 ///|
 /// Clamp percent value.
-pub fn obstacle_clamp_percent(value: Int) -> Int {
+pub fn obstacle_clamp_percent(value : Int) -> Int {
   if value < 0 {
     0
   } else if value > 100 {
@@ -75,7 +75,7 @@ pub fn obstacle_clamp_percent(value: Int) -> Int {
 
 ///|
 /// Base danger score by obstacle type.
-pub fn obstacle_base_danger(kind: Int) -> Int {
+pub fn obstacle_base_danger(kind : Int) -> Int {
   match kind {
     1 => 35
     2 => 45
@@ -88,7 +88,7 @@ pub fn obstacle_base_danger(kind: Int) -> Int {
 
 ///|
 /// Recommended safe distance in meters.
-pub fn obstacle_safe_distance_meters(kind: Int) -> Int {
+pub fn obstacle_safe_distance_meters(kind : Int) -> Int {
   match kind {
     1 => 8
     2 => 10
@@ -101,7 +101,10 @@ pub fn obstacle_safe_distance_meters(kind: Int) -> Int {
 
 ///|
 /// Distance risk score.
-pub fn obstacle_distance_risk(distance_meters: Int, safe_distance_meters: Int) -> Int {
+pub fn obstacle_distance_risk(
+  distance_meters : Int,
+  safe_distance_meters : Int,
+) -> Int {
   let distance = obstacle_clamp_non_negative(distance_meters)
   let safe = obstacle_clamp_non_negative(safe_distance_meters)
 
@@ -117,8 +120,8 @@ pub fn obstacle_distance_risk(distance_meters: Int, safe_distance_meters: Int) -
 ///|
 /// Altitude risk score.
 pub fn obstacle_altitude_risk(
-  drone_altitude_meters: Int,
-  obstacle_height_meters: Int
+  drone_altitude_meters : Int,
+  obstacle_height_meters : Int,
 ) -> Int {
   let altitude = obstacle_clamp_non_negative(drone_altitude_meters)
   let height = obstacle_clamp_non_negative(obstacle_height_meters)
@@ -135,22 +138,24 @@ pub fn obstacle_altitude_risk(
 ///|
 /// Estimate obstacle risk score.
 pub fn obstacle_risk_score(
-  kind: Int,
-  distance_meters: Int,
-  drone_altitude_meters: Int,
-  obstacle_height_meters: Int
+  kind : Int,
+  distance_meters : Int,
+  drone_altitude_meters : Int,
+  obstacle_height_meters : Int,
 ) -> Int {
   let base = obstacle_base_danger(kind)
   let safe_distance = obstacle_safe_distance_meters(kind)
   let distance_risk = obstacle_distance_risk(distance_meters, safe_distance)
-  let altitude_risk = obstacle_altitude_risk(drone_altitude_meters, obstacle_height_meters)
+  let altitude_risk = obstacle_altitude_risk(
+    drone_altitude_meters, obstacle_height_meters,
+  )
 
   obstacle_clamp_percent((base + distance_risk + altitude_risk) / 3)
 }
 
 ///|
 /// Risk level name.
-pub fn obstacle_risk_level(score: Int) -> String {
+pub fn obstacle_risk_level(score : Int) -> String {
   let safe_score = obstacle_clamp_percent(score)
 
   if safe_score >= 80 {
@@ -166,16 +171,16 @@ pub fn obstacle_risk_level(score: Int) -> String {
 
 ///|
 /// Check whether obstacle requires avoidance.
-pub fn obstacle_requires_avoidance(score: Int) -> Bool {
+pub fn obstacle_requires_avoidance(score : Int) -> Bool {
   obstacle_clamp_percent(score) >= 50
 }
 
 ///|
 /// Recommended avoidance action.
 pub fn obstacle_avoidance_action(
-  kind: Int,
-  score: Int,
-  distance_meters: Int
+  kind : Int,
+  score : Int,
+  distance_meters : Int,
 ) -> String {
   let safe_score = obstacle_clamp_percent(score)
   let distance = obstacle_clamp_non_negative(distance_meters)
@@ -197,7 +202,10 @@ pub fn obstacle_avoidance_action(
 
 ///|
 /// Estimate route penalty caused by obstacle.
-pub fn obstacle_route_penalty_minutes(score: Int, avoidance_required: Bool) -> Int {
+pub fn obstacle_route_penalty_minutes(
+  score : Int,
+  avoidance_required : Bool,
+) -> Int {
   let safe_score = obstacle_clamp_percent(score)
 
   if !avoidance_required {
@@ -213,13 +221,13 @@ pub fn obstacle_route_penalty_minutes(score: Int, avoidance_required: Bool) -> I
 
 ///|
 /// Check whether path is safe.
-pub fn obstacle_path_safe(score: Int) -> Bool {
+pub fn obstacle_path_safe(score : Int) -> Bool {
   obstacle_clamp_percent(score) < 60
 }
 
 ///|
 /// Estimate battery cost for avoidance.
-pub fn obstacle_avoidance_battery_cost(score: Int) -> Int {
+pub fn obstacle_avoidance_battery_cost(score : Int) -> Int {
   let safe_score = obstacle_clamp_percent(score)
 
   if safe_score >= 80 {
@@ -236,9 +244,9 @@ pub fn obstacle_avoidance_battery_cost(score: Int) -> Int {
 ///|
 /// Estimate recommended altitude after avoidance.
 pub fn obstacle_recommended_altitude(
-  kind: Int,
-  current_altitude_meters: Int,
-  obstacle_height_meters: Int
+  kind : Int,
+  current_altitude_meters : Int,
+  obstacle_height_meters : Int,
 ) -> Int {
   let current = obstacle_clamp_non_negative(current_altitude_meters)
   let height = obstacle_clamp_non_negative(obstacle_height_meters)
@@ -262,15 +270,15 @@ pub fn obstacle_recommended_altitude(
 
 ///|
 /// Check sensor confidence.
-pub fn obstacle_sensor_confidence_ok(confidence_percent: Int) -> Bool {
+pub fn obstacle_sensor_confidence_ok(confidence_percent : Int) -> Bool {
   obstacle_clamp_percent(confidence_percent) >= 70
 }
 
 ///|
 /// Estimate final safety score.
 pub fn obstacle_safety_score(
-  risk_score: Int,
-  sensor_confidence_percent: Int
+  risk_score : Int,
+  sensor_confidence_percent : Int,
 ) -> Int {
   let risk = obstacle_clamp_percent(risk_score)
   let confidence = obstacle_clamp_percent(sensor_confidence_percent)
@@ -279,7 +287,7 @@ pub fn obstacle_safety_score(
 
 ///|
 /// Safety level name.
-pub fn obstacle_safety_level(score: Int) -> String {
+pub fn obstacle_safety_level(score : Int) -> String {
   let safe_score = obstacle_clamp_percent(score)
 
   if safe_score >= 85 {
@@ -303,16 +311,16 @@ pub fn obstacle_summary() -> Unit {
   let sensor_confidence = 82
 
   let safe_distance = obstacle_safe_distance_meters(kind)
-  let risk = obstacle_risk_score(kind, distance, drone_altitude, obstacle_height)
+  let risk = obstacle_risk_score(
+    kind, distance, drone_altitude, obstacle_height,
+  )
   let risk_level = obstacle_risk_level(risk)
   let avoid = obstacle_requires_avoidance(risk)
   let action = obstacle_avoidance_action(kind, risk, distance)
   let penalty = obstacle_route_penalty_minutes(risk, avoid)
   let battery_cost = obstacle_avoidance_battery_cost(risk)
   let target_altitude = obstacle_recommended_altitude(
-    kind,
-    drone_altitude,
-    obstacle_height,
+    kind, drone_altitude, obstacle_height,
   )
   let path_safe = obstacle_path_safe(risk)
   let confidence_ok = obstacle_sensor_confidence_ok(sensor_confidence)
@@ -330,7 +338,9 @@ pub fn obstacle_summary() -> Unit {
   println("Obstacle action: " + action)
   println("Obstacle route penalty: " + penalty.to_string() + " min")
   println("Obstacle battery cost: " + battery_cost.to_string() + "%")
-  println("Obstacle recommended altitude: " + target_altitude.to_string() + " m")
+  println(
+    "Obstacle recommended altitude: " + target_altitude.to_string() + " m",
+  )
   println("Obstacle path safe: " + path_safe.to_string())
   println("Obstacle sensor confidence ok: " + confidence_ok.to_string())
   println("Obstacle safety score: " + safety.to_string())
