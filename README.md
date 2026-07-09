@@ -636,7 +636,7 @@ let sim = Simulation::new()
 
 AgriDroneSwarm 采用 MoonBit 工程结构组织代码，整体以“模块独立、职责清晰、便于测试、便于扩展”为原则。项目将无人机集群任务拆分为环境建模、无人机状态、任务系统、路径规划、集群协同、控制辅助和日志评估等多个部分。
 
-项目核心入口为 `AgriDroneSwarm.mbt` 中的 `demo()`，命令行运行入口为 `cmd/main.mbt`。
+项目核心入口为 AgriDroneSwarm.mbt 中的 demo()，可通过根目录 main.mbt 作为可执行入口进行验证。
 
 ```text
 AgriDroneSwarm
@@ -857,8 +857,8 @@ utils
 
 ```text
 +--------------------------------------------------+
-|                    cmd/main.mbt                  |
-|                 命令行运行入口                   |
+|                    main.mbt                     |
+|                 可执行入口（根目录）              |
 +-------------------------+------------------------+
                           |
                           v
@@ -1001,7 +1001,6 @@ moon build
 moon check
 moon test
 moon build
-moon run cmd
 ```
 
 对应验证意义如下：
@@ -1010,7 +1009,6 @@ moon run cmd
 moon check ：确认代码和类型检查通过
 moon test  ：确认核心算法和模块逻辑通过测试
 moon build ：确认项目可以完整构建
-moon run cmd ：运行命令行 demo，查看端到端展示效果
 ```
 
 ---
@@ -1023,7 +1021,7 @@ moon run cmd ：运行命令行 demo，查看端到端展示效果
 moon check && moon test && moon build
 ```
 
-该命令会依次完成检查、测试、构建和运行 demo，适合作为竞赛展示或项目验收时的快速验证方式。
+该命令会依次完成检查、测试和构建，验证项目的完整性和可构建性。适合作为竞赛展示或项目验收时的快速验证方式。
 
 
 ## 10. 测试与验证
@@ -1100,7 +1098,6 @@ moon build
 moon check
 moon test
 moon build
-moon run examples/swarm_formation
 ```
 
 ---
