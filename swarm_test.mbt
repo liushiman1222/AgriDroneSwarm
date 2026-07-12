@@ -30,3 +30,4 @@ test "swarm_mission_progress" {
   let progress = swarm.mission_progress(target, 2.0)
   inspect(progress >= 0.0 && progress <= 1.0, content="true")
 }
+ 
